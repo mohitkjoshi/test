@@ -5,40 +5,46 @@ div.container {
      background-color: powderblue;
 	 margin: 3px;
 	 height: 20%;
-	 resize: vertical;
-	 overflow: auto;
 	}
 span.box {background-color: yellow;
 	  margin: 3px;
 	  height: 100%;
 	  width:20%;
 	  display: inline-block;
-	  resize: horizontal;
-	  overflow: auto;
 	}	
 </style>
-<script>
-function allowDrop(ev) {
-  ev.preventDefault();
-}
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script> 
+var xCor,yCor;
+function setHeight(e) {  
 
-function drag(ev) {
-  ev.dataTransfer.setData("text", ev.target.id);
-}
-
-function drop(ev) {
-  ev.preventDefault();
-  var data = ev.dataTransfer.getData("text");
-  ev.target.appendChild(document.getElementById(data));
+  xCor = e.clientX;
+  yCor = e.clientY;
+  yOff = e.offsetY;
+  var ele = e.currentTarget;
+  var coor = "offset: (" + ele.offsetHeight + ")";
+  //alert(ele.offsetTop + ", "+ ele.offsetHeight);
+  if(yCor > (ele.offsetTop + ele.offsetHeight - 30)) {
+	ele.style.height = 15 + yCor - ele.offsetTop ;//- ele.offsetTop; 
+  }
+  app2.message = coor;
 }
 </script>
 
 </head>
 <body>
-<div id = "1" class="container" ondrop="drop(event)" ondragover="allowDrop(event)"><span id = "11"  class="box"  draggable="true" ondragstart="drag(event)">One		</span><span id = "116"  class="box"  draggable="true" ondragstart="drag(event)">Two		</span></div>
-<div id = "2" class="container" ondrop="drop(event)" ondragover="allowDrop(event)"><span id = "12"  class="box"  draggable="true" ondragstart="drag(event)">three	</span></div>
-<div id = "3" class="container" ondrop="drop(event)" ondragover="allowDrop(event)"><span id = "13"  class="box"  draggable="true" ondragstart="drag(event)">four	</span></div>
-<div id = "4" class="container" ondrop="drop(event)" ondragover="allowDrop(event)"><span id = "14"  class="box"  draggable="true" ondragstart="drag(event)">five	</span></div>
-<div id = "5" class="container" ondrop="drop(event)" ondragover="allowDrop(event)"><span id = "15"  class="box"  draggable="true" ondragstart="drag(event)">six		</span></div>
+<div id = "1" class="container" onmousemove="setHeight(event)"><span id="app-2"  v-bind:title="message" class="box">One	</span><span id = "app-3"  class="box">Two	</span></div>
+<script> 
+var app2 = new Vue({
+  el: '#app-2',
+  data: {
+    message: 'You mouse coordinates ' + xCor + ',' + yCor
+  }
+})
+</script>
+<div id = "2" class="container" onmousemove="setHeight(event)"><span id = "12"  class="box" >three	</span></div>
+<div id = "3" class="container" onmousemove="setHeight(event)"><span id = "13"  class="box" >four	</span></div>
+<div id = "4" class="container" onmousemove="setHeight(event)"><span id = "14"  class="box" >five	</span></div>
+<div id = "5" class="container" onmousemove="setHeight(event)"><span id = "15"  class="box" >six		</span></div>
 </body>
 </html>
