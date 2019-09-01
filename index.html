@@ -4,47 +4,17 @@
 div.container {
      background-color: powderblue;
 	 margin: 3px;
-	 height: 20%;
+	 height: 12.5%;
 	}
-span.box {background-color: yellow;
-	  margin: 3px;
-	  height: 100%;
-	  width:20%;
-	  display: inline-block;
-	}	
+
 </style>
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script> 
-var xCor,yCor;
-function setHeight(e) {  
-
-  xCor = e.clientX;
-  yCor = e.clientY;
-  yOff = e.offsetY;
-  var ele = e.currentTarget;
-  var coor = "offset: (" + ele.offsetHeight + ")";
-  //alert(ele.offsetTop + ", "+ ele.offsetHeight);
-  if(yCor > (ele.offsetTop + ele.offsetHeight - 30)) {
-	ele.style.height = 15 + yCor - ele.offsetTop ;//- ele.offsetTop; 
-  }
-  app2.message = coor;
-}
 </script>
-
 </head>
 <body>
-<div id = "1" class="container" onmousemove="setHeight(event)"><span id="app-2"  v-bind:title="message" class="box">One	</span><span id = "app-3"  class="box">Two	</span></div>
-<script> 
-var app2 = new Vue({
-  el: '#app-2',
-  data: {
-    message: 'You mouse coordinates ' + xCor + ',' + yCor
-  }
-})
-</script>
-<div id = "2" class="container" onmousemove="setHeight(event)"><span id = "12"  class="box" >three	</span></div>
-<div id = "3" class="container" onmousemove="setHeight(event)"><span id = "13"  class="box" >four	</span></div>
-<div id = "4" class="container" onmousemove="setHeight(event)"><span id = "14"  class="box" >five	</span></div>
-<div id = "5" class="container" onmousemove="setHeight(event)"><span id = "15"  class="box" >six		</span></div>
+<div id = "1" class="container" onmousemove="setHeight(event)">#Global Warming</div>
+<div id = "2" class="container" onmousemove="setHeight(event)">#Gun Control</div>
+<div id = "3" class="container" onmousemove="setHeight(event)">#Heath Care</div>
+<div id = "4" class="container" onmousemove="setHeight(event)">#Student Debt</div>
 </body>
 </html>
