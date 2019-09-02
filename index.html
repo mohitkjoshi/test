@@ -2,10 +2,10 @@
 <head>
 <style>
 div.container {
-     background-color: #b3ffd9;
-	 margin: 3px;
-	 height: 10%;
+   background-color: #33ff99;
+	margin: 15px;
 	text-align:center;
+	padding: 15px;
 
 	}
 	
@@ -18,7 +18,7 @@ h1.topic {
 
 .slidecontainer {
   width: 94%; /* Width of the outside container */
-	display: inline-block;
+  display: inline-block;
 }
 
 /* The slider itself */
@@ -27,8 +27,8 @@ h1.topic {
   appearance: none;
   width: 100%; /* Full-width */
   height: 15px;
-  border-radius: 5px;  
-  background: #B2FF33; /* Grey background */
+  border-radius: 10px;  
+  background: #e6fff2; /* Grey background */
   outline: none; /* Remove outline */
   opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
   -webkit-transition: .2s; /* 0.2 seconds transition on hover */
@@ -44,16 +44,16 @@ h1.topic {
 .slider::-webkit-slider-thumb {
   -webkit-appearance: none; /* Override default look */
   appearance: none;
-  width: 25px; /* Set a specific slider handle width */
-  height: 25px;
+  width: 40px; /* Set a specific slider handle width */
+  height: 40px;
   border-radius: 50%; 
   background: #4CAF50; /* Green background */
   cursor: pointer; /* Cursor on hover */
 }
 
 .slider::-moz-range-thumb {
-  width: 25px; /* Set a specific slider handle width */
-  height: 25px;
+  width: 40px; /* Set a specific slider handle width */
+  height: 40px;
   border-radius: 50%;
   background: #4CAF50; /* Green background */
   cursor: pointer; /* Cursor on hover */
@@ -63,13 +63,24 @@ h1.topic {
 </script>
 </head>
 <body>
-<div id = "1" class="container" onmousemove="setHeight(event)"><h1 class="topic">#Global Warming</h1></div>
-<div id = "2" class="container" onmousemove="setHeight(event)"><h1 class="topic">#Gun Control</h1></div>
+<div id = "1" class="container" onmousemove="setHeight(event)"><h1 class="topic">#Global Warming</h1>
+	<div class="slidecontainer">
+	  <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+	</div>
+</div>
+<div id = "2" class="container" onmousemove="setHeight(event)"><h1 class="topic">#Gun Control</h1>
+	<div class="slidecontainer">
+	  <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+	</div>
+</div>
 <div id = "3" class="container" onmousemove="setHeight(event)"><h1 class="topic">#Heath Care</h1>
 	<div class="slidecontainer">
 	  <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
 	</div>
 </div>
-<div id = "4" class="container" onmousemove="setHeight(event)"><h1 class="topic">#Student Debt</h1></div>
+<div id = "4" class="container" onmousemove="setHeight(event)"><h1 class="topic">#Student Debt</h1>
+	<div class="slidecontainer">
+	  <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+	</div></div>
 </body>
 </html>
