@@ -13,7 +13,8 @@ div.container {
 	text-align:center;
 	font-family:courier;
 	font-size:40;
-	color:black;
+	color:blue;
+  text-decoration:underline;
 	}
 
 .percent {
@@ -72,6 +73,8 @@ div.container {
   <script>
   var percent = [25,25,25,25];
   var topics = ["#Global Warming", "#Gun Control", "#Health Care", "#Student Debt", "#LGBTQ Rights", "#National Debt"];
+  sessionStorage.index = 0;
+//  localStorage.setItem("index", "0");
   var body = document.getElementsByTagName("BODY")[0];
   var topicWeights = [];
 
@@ -95,10 +98,20 @@ div.container {
   }
 
   for(var i = 0; i < topics.length; i++) {
-    body.innerHTML += "<div class='container'><h1 class='topic'><a href='survey_2.html'>" + topics[i] + "</a></h1><div class='slidecontainer'><input oninput = 'resetPercent(event)' type='range' min='1' max='100' value='" + topicWeights[i] + "' class='slider'> </div>&nbsp;&nbsp;<span class='percent'>" + topicWeights[i] + "</span></div>";
+    body.innerHTML += "<div class='container'><h1 class='topic' onclick='navigateToSurvey2(event)'>" + topics[i] + "</h1><div class='slidecontainer'><input oninput = 'resetPercent(event)' type='range' min='1' max='100' value='" + topicWeights[i] + "' class='slider'> </div>&nbsp;&nbsp;<span class='percent'>" + topicWeights[i] + "</span></div>";
   }
   //var slider = document.getElementById("myRange1");
   var output = document.getElementsByTagName("BODY")[0].getElementsByClassName("container");
+
+  function navigateToSurvey2(e){
+    for (var i = 0; i < output.length; i++) {
+      if (output[i] == e.target.parentElement){
+         sessionStorage.index = i;
+         window.location.href = "survey_2.html";
+      }
+    }
+
+  }
 
   // Update the current slider value (each time you drag the slider handle)
   function resetPercent(e) {
