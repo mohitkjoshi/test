@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <title>Hello, world!</title>
+  </head>
+<style>
+  /* .alpha { color: $purple; }
+  .beta {
+    color: $yellow-300;
+    background-color: $indigo-900;
+  } */
+</style>
+  <body>
+    <!-- <h1>Your take on news!</h1>
+    <form action="" onsubmit="sendMessage(event)">
+        <input type="text" id="messageText" autocomplete="off"/>
+        <button>Read News</button>
+    </form> -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <div class="container-fluid bg-warning" id="postContainer">
+      <div class = 'pb-1' onclick="onReply(event)" data-thread-id = 99 data-post-level = 9 data-parent_post_id = 9>
+        <div class="row bg-secondary">
+          <div class="col text-white">
+              <p class="h2 text-justify" display="inline"> 
+                    <img src="https://picsum.photos/100/100" class="rounded float-start m-2" alt="...">          
+                    Lorem Ipsum My Bio Lorem Ipsum My Bio Lorem Ipsum My Bio Lorem Ipsum My Bio Lorem Ipsum My Bio Lorem Ipsum My Bio Lorem Ipsum My Bio Lorem<a style="color:beige">&#10697;</a>
+              </p>
+          </div>
+        </div>
+        <div class="row bg-secondary">
+          <div class="col" >
+          </div>
+          <div class="col h1 text-white">
+            <img src="like.png" height="50" width="50" class="rounded float-start m-2" alt="...">2  
+          </div>
+          <div class="col h1 text-white">
+            <img src="dislike.png" height="50" width="50" class="rounded float-start m-2" alt="...">0 
+          </div>
+          <div class="col h1 text-white">
+            <img src="reply.png" height="50" width="50" class="rounded float-start m-2" alt="..." id="replies_img">1
+          </div>
+          <div class="col h1 text-white">
+            <img src="views.png" height="50" width="50" class="rounded float-start m-2" alt="...">1
+          </div>              
+        </div>
+        <div id="replyButtons" hidden class="row bg-secondary">
+          <div class="col d-flex justify-content-between" >
+            <button class="btn text-white" type="button" id="replyCancel" style="font-size: 30px; background-color: rgba(24, 22, 14, 0.634);">Cancel</button>
+            <button class="btn text-white" type="button" id="replySubmit" style="font-size: 30px; background-color: rgba(24, 22, 14, 0.634);">Post</button>
+          </div>    
+        </div>
+        <div class="row p-3 bg-secondary">
+          <textarea class="form-control text-white border-0" hidden id="replyText" rows="10" style="font-size: 30px; background-color: rgba(183, 166, 124, 0.634);"></textarea>
+        </div>
+      </div>
+
+
+      <div class = 'pb-1' hidden id="post_template" onclick="onReply(event)" data-thread-id = "" data-post-level = "" data-parent-post-id = "">
+        <div class="row bg-secondary">
+          <div class="col text-white">
+              <p class="h2 text-justify"> 
+                    <img id="post_logo" src="https://picsum.photos/100/100" class="rounded float-start m-2" alt="...">          
+                    <h2 id="post_text" style="display:inline"></h2>
+                    <h1 style="display:inline"><a id="post_url" href="" style="color:beige">&#10697;</a></h1>
+              </p>
+            </div>
+          </div>
+          <div class="row bg-secondary">
+            <div class="col" >
+            </div>
+            <div class="col text-white">
+              <img src="reply.png" height="50" width="50" class="rounded float-start m-2" alt="..." onclick="" id="replies_img"><h1 id="post_replies"></h1> 
+            </div>
+            <div class="col text-white">
+              <img src="like.png" height="50" width="50" class="rounded float-start m-2" alt="..." id="likes_img"><h1 id="post_likes"></h1>  
+            </div>
+            <div class="col text-white">
+              <img src="dislike.png" height="50" width="50" class="rounded float-start m-2" alt="..." id="dislikes_img"><h1 id="post_dislikes"></h1> 
+            </div>
+            <div class="col text-white">
+              <img src="views.png" height="50" width="50" class="rounded float-start m-2" alt="..." id="views_img"><h1 id="post_views"></h1> 
+            </div>               
+        </div>
+        <div id="replyButtons" hidden class="row bg-secondary">
+          <div class="col d-flex justify-content-between" >
+            <button class="btn text-white" type="button" id="replyCancel" style="font-size: 30px; background-color: rgba(24, 22, 14, 0.634);">Cancel</button>
+            <button class="btn text-white" type="button" id="replySubmit" style="font-size: 30px; background-color: rgba(24, 22, 14, 0.634);">Post</button>
+          </div>    
+        </div>
+        <div class="row p-3 bg-secondary">
+          <textarea class="form-control text-white border-0" hidden id="replyText" rows="10" style="font-size: 30px; background-color: rgba(128, 128, 128, 0.948);"></textarea>
+        </div>
+      </div>
+    </div>
+      <script>
+
+        var postContainer = null;
+        var postTemplate = null;
+        var ws = new WebSocket("ws://localhost:8000/ws");
+        var newPosts = new Map();
+
+        window.onload = (event) => {
+          postContainer = document.getElementById('postContainer')
+          postTemplate = document.getElementById('post_template');
+          sendMessage(event);
+        };
+
+        function onReply(event) {
+          console.log(event.type);
+          let postDOM = event.currentTarget;
+          if(event.target.id == "replies_img"){
+            let replyText = postDOM.querySelector("#replyText");
+            let replyButtons = postDOM.querySelector("#replyButtons");
+            replyText.hidden = !replyText.hidden;
+            replyButtons.hidden = replyText.hidden;
+
+          } else if (event.target.id == "replySubmit"){
+            let replyText = postDOM.querySelector("#replyText");
+            let replyButtons = postDOM.querySelector("#replyButtons");
+            var postReply = new Object();
+            postReply.thread_id = postDOM.dataset.threadId;
+            postReply.post_level = 1 + Number(postDOM.dataset.postLevel);
+            postReply.text = replyText.value;
+            postReply.type = 'POST_REPLY';
+            postReply.parent_post_id = postDOM.id;
+            postReply.correlation_id = Date.now();
+            ws.send(JSON.stringify(postReply));
+
+            replyText.hidden = !replyText.hidden;
+            replyButtons.hidden = replyText.hidden;
+            
+            let postNode = postTemplate.cloneNode(true);
+            postNode.id = postReply.correlation_id;
+            postNode.classList.add('ps-' + postReply.post_level);
+            postNode.hidden = false;
+            postNode.dataset.threadId = postReply.thread_id;
+            postNode.dataset.postLevel = postReply.post_level;
+            postNode.dataset.parentPostId = postReply.parent_post_id
+            postNode.querySelector("#post_text").innerHTML = postReply.text;
+            newPosts.set(''+ postNode.id, postNode);
+            console.log("temp id:" + postNode.id);
+            //alert(JSON.stringify(postReply));
+          }
+        }
+
+        // function replyFocus(event) {
+        //   event.currentTarget.parentNode.previousElementSibling.hidden = false;
+        // }
+
+        // function replyBlur(event) {
+        //   event.currentTarget.hidden = true
+        //   event.currentTarget.parentNode.previousElementSibling.hidden = true;
+        // }
+        
+        function sendMessage(event) {
+            let importNews = new Object();
+            importNews.type = 'IMPORT_NEWS';
+            ws.send(JSON.stringify(importNews));
+        }
+
+        ws.onmessage = function(event) {
+
+
+            let reuters_logo = "https://www.reutersagency.com/wp-content/uploads/2019/06/fav-150x150.png";
+
+            var jsonObject = JSON.parse(event.data);
+            if (jsonObject['type'] == 'POST_REPLY'){
+              if(jsonObject['status'] == 'SUCCESS' && jsonObject['correlation_id'] != null){
+                let newPostCreated = newPosts.get(''+jsonObject['correlation_id']);
+                console.log(newPostCreated);
+                newPostCreated.id = jsonObject['id'];
+                let parentPost = document.getElementById(jsonObject['parent_post_id']);
+                parentPost.after(newPostCreated);
+              } else {
+                console.log("post creation failed");
+              }
+            } else {
+
+              var posts = jsonObject['posts'];
+              //alert(posts);
+              //alert(jsonObject['posts'][0]);
+              //alert(jsonObject['posts'][0]['post_id']);
+              for (var index in posts) {
+
+                  let post = posts[index];
+                  let post_id = post['post_id'];
+                  let thread_id = post['thread_id'];
+                  let post_level = post['post_level'];              
+                  let post_text = post['text'];
+                  let post_url =  post['url'];
+                  let post_replies = 0;
+                  let post_likes = post['likes'];
+                  let post_dislikes = post['dislikes'];
+                  let post_views = post['views'];
+                  let parent_post_id = post['parent_post_id'];
+
+                  let postNode = postTemplate.cloneNode(true);
+                  postNode.id = post_id;
+                  postNode.classList.add('ps-' + post_level);
+                  postNode.hidden = false;
+                  postNode.dataset.threadId = thread_id;
+                  postNode.dataset.postLevel = post_level;
+                  postNode.dataset.parentPostId = parent_post_id;
+                  postNode.querySelector("#post_text").innerHTML = post_text;
+                  if(post_url != null) {
+                    postNode.querySelector("#post_url").setAttribute("href", post_url);
+                  }                
+                  postNode.querySelector("#post_logo").setAttribute("src", reuters_logo);
+                  postNode.querySelector("#post_replies").innerHTML = post_replies;
+                  postNode.querySelector("#post_likes").innerHTML = post_likes;
+                  postNode.querySelector("#post_dislikes").innerHTML = post_dislikes;
+                  postNode.querySelector("#post_views").innerHTML = post_views;
+
+                  postContainer.appendChild(postNode);
+              }
+            }
+        };
+
+    </script>
+  </body>
+</html>
