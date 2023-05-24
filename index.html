@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -102,13 +103,13 @@
 
         var postContainer = null;
         var postTemplate = null;
-        var ws = new WebSocket("ws://ws.yourtake.org:5000/ws");
+        var ws = new WebSocket("ws://localhost/ws");
         var newPosts = new Map();
 
         window.onload = (event) => {
           postContainer = document.getElementById('postContainer')
           postTemplate = document.getElementById('post_template');
-          sendMessage(event);
+          sendData(event);
         };
 
         function onReply(event) {
@@ -157,12 +158,24 @@
         //   event.currentTarget.hidden = true
         //   event.currentTarget.parentNode.previousElementSibling.hidden = true;
         // }
-        
-        function sendMessage(event) {
-            let importNews = new Object();
-            importNews.type = 'IMPORT_NEWS';
-            ws.send(JSON.stringify(importNews));
-        }
+        function sendData(event){
+            if(ws.readyState){
+              console.log('sending event type:' + event.type);
+              let getPosts = new Object();
+              getPosts.type = 'GET_POSTS';
+              ws.send(JSON.stringify(getPosts));
+            }
+            else
+            {
+                console.log('conection is not ready yet');
+                setTimeout(sendData(event), 100);
+            }
+        }     
+        // function sendMessage(event) {
+        //     let importNews = new Object();
+        //     importNews.type = 'IMPORT_NEWS';
+        //     ws.send(JSON.stringify(importNews));
+        // }
 
         ws.onmessage = function(event) {
 
