@@ -11,11 +11,11 @@
     <title>Hello, world!</title>
   </head>
 <style>
-  /* .alpha { color: $purple; }
-  .beta {
-    color: $yellow-300;
-    background-color: $indigo-900;
-  } */
+  img.logo {
+    height: 100px;
+    width: 100px;
+  }
+
 </style>
   <body>
     <!-- <h1>Your take on news!</h1>
@@ -23,50 +23,14 @@
         <input type="text" id="messageText" autocomplete="off"/>
         <button>Read News</button>
     </form> -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous">
+    </script>
     <div class="container-fluid bg-warning" id="postContainer">
-      <div class = 'pb-1' onclick="onReply(event)" data-thread-id = 99 data-post-level = 9 data-parent_post_id = 9>
-        <div class="row bg-secondary">
-          <div class="col text-white">
-              <p class="h2 text-justify" display="inline"> 
-                    <img src="https://picsum.photos/100/100" class="rounded float-start m-2" alt="...">          
-                    Lorem Ipsum My Bio Lorem Ipsum My Bio Lorem Ipsum My Bio Lorem Ipsum My Bio Lorem Ipsum My Bio Lorem Ipsum My Bio Lorem Ipsum My Bio Lorem<a style="color:beige">&#10697;</a>
-              </p>
-          </div>
-        </div>
-        <div class="row bg-secondary">
-          <div class="col" >
-          </div>
-          <div class="col h1 text-white">
-            <img src="like.png" height="50" width="50" class="rounded float-start m-2" alt="...">2  
-          </div>
-          <div class="col h1 text-white">
-            <img src="dislike.png" height="50" width="50" class="rounded float-start m-2" alt="...">0 
-          </div>
-          <div class="col h1 text-white">
-            <img src="reply.png" height="50" width="50" class="rounded float-start m-2" alt="..." id="replies_img">1
-          </div>
-          <div class="col h1 text-white">
-            <img src="views.png" height="50" width="50" class="rounded float-start m-2" alt="...">1
-          </div>              
-        </div>
-        <div id="replyButtons" hidden class="row bg-secondary">
-          <div class="col d-flex justify-content-between" >
-            <button class="btn text-white" type="button" id="replyCancel" style="font-size: 30px; background-color: rgba(24, 22, 14, 0.634);">Cancel</button>
-            <button class="btn text-white" type="button" id="replySubmit" style="font-size: 30px; background-color: rgba(24, 22, 14, 0.634);">Post</button>
-          </div>    
-        </div>
-        <div class="row p-3 bg-secondary">
-          <textarea class="form-control text-white border-0" hidden id="replyText" rows="10" style="font-size: 30px; background-color: rgba(183, 166, 124, 0.634);"></textarea>
-        </div>
-      </div>
-
-
       <div class = 'pb-1' hidden id="post_template" onclick="onReply(event)" data-thread-id = "" data-post-level = "" data-parent-post-id = "">
         <div class="row bg-secondary">
           <div class="col text-white">
               <p class="h2 text-justify"> 
-                    <img id="post_logo" src="https://picsum.photos/100/100" class="rounded float-start m-2" alt="...">          
+                    <img id="post_logo" src="" class="logo rounded float-start m-2" alt="...">          
                     <h2 id="post_text" style="display:inline"></h2>
                     <h1 style="display:inline"><a id="post_url" href="" style="color:beige">&#10697;</a></h1>
               </p>
@@ -100,11 +64,13 @@
       </div>
     </div>
       <script>
-
-        var postContainer = null;
+       var postContainer = null;
         var postTemplate = null;
         var ws = new WebSocket("wss://ws.yourtake.org/ws");
         var newPosts = new Map();
+
+        var reuters_logo = "https://companieslogo.com/img/orig/TRI-1c1a5996.png?t=1647958921"
+        var post_logo = "https://picsum.photos/100/100"; 
 
         window.onload = (event) => {
           postContainer = document.getElementById('postContainer')
@@ -146,7 +112,6 @@
             postNode.querySelector("#post_text").innerHTML = postReply.text;
             newPosts.set(''+ postNode.id, postNode);
             console.log("temp id:" + postNode.id);
-            //alert(JSON.stringify(postReply));
           }
         }
 
@@ -180,8 +145,6 @@
         ws.onmessage = function(event) {
 
 
-            let reuters_logo = "https://www.reutersagency.com/wp-content/uploads/2019/06/fav-150x150.png";
-
             var jsonObject = JSON.parse(event.data);
             if (jsonObject['type'] == 'POST_REPLY'){
               if(jsonObject['status'] == 'SUCCESS' && jsonObject['correlation_id'] != null){
@@ -194,11 +157,7 @@
                 console.log("post creation failed");
               }
             } else {
-
               var posts = jsonObject['posts'];
-              //alert(posts);
-              //alert(jsonObject['posts'][0]);
-              //alert(jsonObject['posts'][0]['post_id']);
               for (var index in posts) {
 
                   let post = posts[index];
@@ -224,7 +183,11 @@
                   if(post_url != null) {
                     postNode.querySelector("#post_url").setAttribute("href", post_url);
                   }                
-                  postNode.querySelector("#post_logo").setAttribute("src", reuters_logo);
+                  if(post_level == 0 ){
+                    postNode.querySelector("#post_logo").setAttribute("src", reuters_logo);
+                  } else {
+                    postNode.querySelector("#post_logo").setAttribute("src", post_logo);
+                  }
                   postNode.querySelector("#post_replies").innerHTML = post_replies;
                   postNode.querySelector("#post_likes").innerHTML = post_likes;
                   postNode.querySelector("#post_dislikes").innerHTML = post_dislikes;
@@ -238,3 +201,4 @@
     </script>
   </body>
 </html>
+
