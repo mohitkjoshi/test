@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -26,13 +25,13 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous">
     </script>
     <div class="container-fluid bg-warning" id="postContainer">
-      <div class = 'pb-1' hidden id="post_template" onclick="onReply(event)" data-thread-id = "" data-post-level = "" data-parent-post-id = "">
+      <div class = 'pb-1' hidden id="post_template" onclick="processClick(event)" data-thread-id = "" data-post-level = "" data-like-dislike = "" data-parent-post-id = "">
         <div class="row bg-secondary">
           <div class="col text-white">
               <p class="h2 text-justify"> 
                     <img id="post_logo" src="" class="logo rounded float-start m-2" alt="...">          
                     <h2 id="post_text" style="display:inline"></h2>
-                    <h1 style="display:inline"><a id="post_url" href="" style="color:beige">&#10697;</a></h1>
+                    <h1 style="display:inline"><a id="post_url" hidden href="" style="color:beige">&#10697;</a></h1>
               </p>
             </div>
           </div>
@@ -43,13 +42,13 @@
               <img src="reply.png" height="50" width="50" class="rounded float-start m-2" alt="..." onclick="" id="replies_img"><h1 id="post_replies"></h1> 
             </div>
             <div class="col text-white">
-              <img src="like.png" height="50" width="50" class="rounded float-start m-2" alt="..." id="likes_img"><h1 id="post_likes"></h1>  
+              <img src="like.png" height="50" width="50" class="rounded float-start m-2" alt="..." onclick="" id="likes_img"><h1 id="post_likes"></h1>  
             </div>
             <div class="col text-white">
-              <img src="dislike.png" height="50" width="50" class="rounded float-start m-2" alt="..." id="dislikes_img"><h1 id="post_dislikes"></h1> 
+              <img src="dislike.png" height="50" width="50" class="rounded float-start m-2" alt="..." onclick="" id="dislikes_img"><h1 id="post_dislikes"></h1> 
             </div>
             <div class="col text-white">
-              <img src="views.png" height="50" width="50" class="rounded float-start m-2" alt="..." id="views_img"><h1 id="post_views"></h1> 
+              <img src="views.png" height="50" width="50" class="rounded float-start m-2" alt="..."  id="views_img"><h1 id="post_views"></h1> 
             </div>               
         </div>
         <div id="replyButtons" hidden class="row bg-secondary">
@@ -66,6 +65,15 @@
       <script>
        var postContainer = null;
         var postTemplate = null;
+
+        const REQUEST_TYPE = {
+          GET_POSTS: "GET_POSTS",
+          ADD_REPLY: "ADD_REPLY",
+          ADD_LIKE_DISLIKE: "ADD_LIKE_DISLIKE",
+          DELETE_LIKE_DISLIKE: "DELETE_LIKE_DISLIKE",
+          UPDATE_LIKE_DISLIKE: "UPDATE_LIKE_DISLIKE"
+      
+        }
         var ws = new WebSocket("wss://ws.yourtake.org/ws");
         var newPosts = new Map();
 
@@ -75,10 +83,12 @@
         window.onload = (event) => {
           postContainer = document.getElementById('postContainer')
           postTemplate = document.getElementById('post_template');
-          sendData(event);
+          let getPosts = new Object();
+          getPosts.type = REQUEST_TYPE.GET_POSTS;
+          sendData(getPosts);
         };
 
-        function onReply(event) {
+        function processClick(event) {
           console.log(event.type);
           let postDOM = event.currentTarget;
           if(event.target.id == "replies_img"){
@@ -86,19 +96,85 @@
             let replyButtons = postDOM.querySelector("#replyButtons");
             replyText.hidden = !replyText.hidden;
             replyButtons.hidden = replyText.hidden;
+          } else if(event.target.id == "likes_img" || event.target.id == "dislikes_img"){
+            let postReply = new Object();
+            postReply.post_id = postDOM.id;
+            postReply.user_id = 101;
+            postReply.thread_id = postDOM.dataset.threadId;
+            let postLikes = postDOM.querySelector("#post_likes");
+            let postDislikes = postDOM.querySelector("#post_dislikes");
+            let postLikesImg = postDOM.querySelector("#likes_img");
+            let postDislikesImg = postDOM.querySelector("#dislikes_img");
+            let like_count = parseInt(postLikes.innerHTML);
+            let dislike_count = parseInt(postDislikes.innerHTML);
+   
+            if(event.target.id == "likes_img" ){
+              postReply.like_dislike = 'L';
+              if(postDOM.dataset.likeDislike == 'L') {
+                postDOM.dataset.likeDislike == '';
+
+                postLikesImg.src = 'like.png';
+                postLikes.innerHTML = "" + (like_count - 1);
+                postReply.type = REQUEST_TYPE.DELETE_LIKE_DISLIKE;
+              } else if(postDOM.dataset.likeDislike == 'D') {
+                postDOM.dataset.likeDislike == 'L';
+
+                postDislikesImg.src = 'dislike.png'
+                postLikesImg.src = 'like_selected.png';
+                postLikes.innerHTML = "" + (like_count + 1);
+                postDislikes.innerHTML = "" + (dislike_count - 1);
+
+                postReply.type = REQUEST_TYPE.UPDATE_LIKE_DISLIKE;
+              } else {
+                postDOM.dataset.likeDislike == 'L';
+
+                event.target.src = 'like_selected.png';
+                postLikes.innerHTML = "" + (like_count + 1);
+
+                postReply.type = REQUEST_TYPE.ADD_LIKE_DISLIKE;
+              }
+            }
+
+            if(event.target.id == "dislikes_img" ){
+              postReply.like_dislike = 'D';
+              if(postDOM.dataset.likeDislike == 'D') {
+                postDOM.dataset.likeDislike == '';
+
+                postDislikesImg.src = 'dislike.png';
+                postDislikes.innerHTML = "" + (dislike_count - 1);
+                postReply.type = REQUEST_TYPE.DELETE_LIKE_DISLIKE;
+              } else if(postDOM.dataset.likeDislike == 'L') {
+                postDOM.dataset.likeDislike == 'D';
+
+                postLikesImg.src = 'like.png';
+                postDislikesImg.src = 'dislike_selected.png'
+                postDislikes.innerHTML = "" + (dislike_count + 1);
+                postLikes.innerHTML = "" + (like_count - 1);
+                postReply.type = REQUEST_TYPE.UPDATE_LIKE_DISLIKE;
+              } else {
+                postDOM.dataset.likeDislike == 'D';
+
+                event.target.src = 'like_selected.png';
+                postDislikes.innerHTML = "" + (dislike_count + 1);
+                postReply.type = REQUEST_TYPE.ADD_LIKE_DISLIKE;
+              }
+            } 
+            console.log("sending request :" + postReply)
+            sendData(postReply);
 
           } else if (event.target.id == "replySubmit"){
             let replyText = postDOM.querySelector("#replyText");
             let replyButtons = postDOM.querySelector("#replyButtons");
-            var postReply = new Object();
+            let postReply = new Object();
             postReply.thread_id = postDOM.dataset.threadId;
             postReply.post_level = 1 + Number(postDOM.dataset.postLevel);
             postReply.text = replyText.value;
-            postReply.type = 'POST_REPLY';
+            postReply.type = REQUEST_TYPE.ADD_REPLY;
             postReply.parent_post_id = postDOM.id;
             postReply.correlation_id = Date.now();
-            ws.send(JSON.stringify(postReply));
-
+            //ws.send(JSON.stringify(postReply));
+            console.log("sending request :" + postReply)
+            sendData(postReply);
             replyText.hidden = !replyText.hidden;
             replyButtons.hidden = replyText.hidden;
             
@@ -126,13 +202,11 @@
         function sendData(event){
             if(ws.readyState){
               console.log('sending event type:' + event.type);
-              let getPosts = new Object();
-              getPosts.type = 'GET_POSTS';
-              ws.send(JSON.stringify(getPosts));
+              ws.send(JSON.stringify(event));
             }
             else
             {
-                console.log('conection is not ready yet');
+                console.log('conection not active');
                 setTimeout(sendData, 500, event);
             }
         }     
@@ -141,11 +215,10 @@
         //     importNews.type = 'IMPORT_NEWS';
         //     ws.send(JSON.stringify(importNews));
         // }
+
         ws.onmessage = function(event) {
-
-
             var jsonObject = JSON.parse(event.data);
-            if (jsonObject['type'] == 'POST_REPLY'){
+            if (jsonObject['type'] == REQUEST_TYPE.ADD_REPLY){
               if(jsonObject['status'] == 'SUCCESS' && jsonObject['correlation_id'] != null){
                 let newPostCreated = newPosts.get(''+jsonObject['correlation_id']);
                 console.log(newPostCreated);
@@ -155,7 +228,7 @@
               } else {
                 console.log("post creation failed");
               }
-            } else {
+            } else if (jsonObject['type'] == REQUEST_TYPE.GET_POSTS){
               var posts = jsonObject['posts'];
               for (var index in posts) {
 
@@ -168,6 +241,7 @@
                   let post_replies = 0;
                   let post_likes = post['likes'];
                   let post_dislikes = post['dislikes'];
+                  let post_like_dislike = post['like_dislike'];
                   let post_views = post['views'];
                   let parent_post_id = post['parent_post_id'];
 
@@ -177,17 +251,25 @@
                   postNode.hidden = false;
                   postNode.dataset.threadId = thread_id;
                   postNode.dataset.postLevel = post_level;
+                  postNode.dataset.likeDislike = post_like_dislike;
                   postNode.dataset.parentPostId = parent_post_id;
                   postNode.querySelector("#post_text").innerHTML = post_text;
-                  if(post_url != null) {
+                  if(post_url != null ) {
                     postNode.querySelector("#post_url").setAttribute("href", post_url);
-                  }                
+                    postNode.querySelector("#post_url").hidden = false;
+                  } 
+
                   if(post_level == 0 ){
                     postNode.querySelector("#post_logo").setAttribute("src", reuters_logo);
                   } else {
                     postNode.querySelector("#post_logo").setAttribute("src", post_logo);
                   }
                   postNode.querySelector("#post_replies").innerHTML = post_replies;
+                  if(post_like_dislike == 'L'){
+                    postNode.querySelector("#likes_img").src = 'like_selected.png';
+                  } else if(post_like_dislike == 'D') {
+                    postNode.querySelector("#dislikes_img").src = 'dislike_selected.png';
+                  }
                   postNode.querySelector("#post_likes").innerHTML = post_likes;
                   postNode.querySelector("#post_dislikes").innerHTML = post_dislikes;
                   postNode.querySelector("#post_views").innerHTML = post_views;
@@ -200,4 +282,3 @@
     </script>
   </body>
 </html>
-
