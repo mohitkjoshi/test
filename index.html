@@ -111,13 +111,13 @@
             if(event.target.id == "likes_img" ){
               postReply.like_dislike = 'L';
               if(postDOM.dataset.likeDislike == 'L') {
-                postDOM.dataset.likeDislike == '';
+                postDOM.dataset.likeDislike = '';
 
                 postLikesImg.src = 'like.png';
                 postLikes.innerHTML = "" + (like_count - 1);
                 postReply.type = REQUEST_TYPE.DELETE_LIKE_DISLIKE;
               } else if(postDOM.dataset.likeDislike == 'D') {
-                postDOM.dataset.likeDislike == 'L';
+                postDOM.dataset.likeDislike = 'L';
 
                 postDislikesImg.src = 'dislike.png'
                 postLikesImg.src = 'like_selected.png';
@@ -126,7 +126,7 @@
 
                 postReply.type = REQUEST_TYPE.UPDATE_LIKE_DISLIKE;
               } else {
-                postDOM.dataset.likeDislike == 'L';
+                postDOM.dataset.likeDislike = 'L';
 
                 event.target.src = 'like_selected.png';
                 postLikes.innerHTML = "" + (like_count + 1);
@@ -138,13 +138,13 @@
             if(event.target.id == "dislikes_img" ){
               postReply.like_dislike = 'D';
               if(postDOM.dataset.likeDislike == 'D') {
-                postDOM.dataset.likeDislike == '';
+                postDOM.dataset.likeDislike = '';
 
                 postDislikesImg.src = 'dislike.png';
                 postDislikes.innerHTML = "" + (dislike_count - 1);
                 postReply.type = REQUEST_TYPE.DELETE_LIKE_DISLIKE;
               } else if(postDOM.dataset.likeDislike == 'L') {
-                postDOM.dataset.likeDislike == 'D';
+                postDOM.dataset.likeDislike = 'D';
 
                 postLikesImg.src = 'like.png';
                 postDislikesImg.src = 'dislike_selected.png'
@@ -152,9 +152,9 @@
                 postLikes.innerHTML = "" + (like_count - 1);
                 postReply.type = REQUEST_TYPE.UPDATE_LIKE_DISLIKE;
               } else {
-                postDOM.dataset.likeDislike == 'D';
+                postDOM.dataset.likeDislike = 'D';
 
-                event.target.src = 'like_selected.png';
+                event.target.src = 'dislike_selected.png';
                 postDislikes.innerHTML = "" + (dislike_count + 1);
                 postReply.type = REQUEST_TYPE.ADD_LIKE_DISLIKE;
               }
