@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -17,6 +18,86 @@
 
 </style>
   <body>
+    <div class="container-fluid sticky-top bg-dark align-items-center text-white">
+<!--       <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img src="yt.png" alt="" width="40" height="40">
+        </a>
+        <a class="navbar-brand col-4 mb-0 h1 active" aria-current="page" href="#">News Feed</a>
+        <a class="navbar-brand col-4 mb-0 h1" href="#">Your Timeline</a>
+        <a class="navbar-brand col-4 mb-0 h1" href="#">Search</a>
+      </div> -->
+      <div class="row d-flex no-gutters">
+        <div class="col-auto ">
+          <img src="yt.png" alt="" width="80" height="80">
+        </div>
+
+        <div class="col offset-md-1 m-1 d-flex align-items-center justify-content-center text-white bg-gradient ">
+          <h2>News Feed</h2>
+        </div>
+
+        <div class="col m-1 d-flex align-items-center justify-content-center   bg-gradient ">
+          <h2>Your Timeline</h2>
+        </div>
+
+        <div class="col m-1 d-flex align-items-center justify-content-center bg-gradient ">
+          <h2>Search</h2>
+        </div>
+      </div>
+    </div>
+    <div class="container" id="signup_form">
+      <div class="row">
+        <div class="col-md-6">
+          <h2>Signup</h2>
+          <form action="" method="post">
+            <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="user_email">
+            </div>
+            <div class="mb-3">
+              <label for="username" class="form-label">User Name</label>
+              <input type="text" class="form-control" id="user_name">
+              </div>
+            <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" onfocusout="validateSignup()">
+            </div>
+            <div class="mb-3">
+            <label for="confirm_password" class="form-label">Confirm Password</label>
+            <input type="password" class="form-control" id="confirm_password" name="confirm_password" onfocusout="validateSignup()">
+            </div>
+            <button type="button" class="btn btn-primary" id="signup_button" onclick="processSignup(event)">Sign Up</button>
+            <div class="mb-3">
+              Already have an account? <a href="javascript:void(0);" onclick="displayPage(PAGE.LOGIN)">log in</a> instead.
+            </div>
+            </form>
+        </div>
+      </div>
+    </div>
+    <div class="container " id="login_form" hidden>
+      <div class="row">
+        <div class="col-md-6">
+          <h2>Login</h2>
+          <form action="" method="post">
+            <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="user_email">
+            </div>
+            <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password">
+            </div>
+            <button type="button" class="btn btn-primary" id="login_button" onclick="processLogin(event)">Login</button>
+            <div class="mb-3">
+            <a href="javascript:void(0);">Forgot password?</a>
+            </div>
+            <div class="mb-3">
+              Dont have an account? <a href="javascript:void(0);" onclick="displayPage(PAGE.SIGNUP)">Sign Up</a> instead.
+            </div>
+            </form>
+        </div>
+      </div>
+    </div>
     <!-- <h1>Your take on news!</h1>
     <form action="" onsubmit="sendMessage(event)">
         <input type="text" id="messageText" autocomplete="off"/>
@@ -29,7 +110,9 @@
         <div class="row bg-secondary">
           <div class="col text-white">
               <p class="h2 text-justify"> 
-                    <img id="post_logo" src="" class="logo rounded float-start m-2" alt="...">          
+                    <img id="post_logo" src="" class="logo rounded float-start m-2" alt="...">      
+                    <h1 id="user_name" style="display:inline"></h1><br>  
+                    <h2 id="post_timestamp" style="display:inline"></h2><br>  
                     <h2 id="post_text" style="display:inline"></h2>
                     <h1 style="display:inline"><a id="post_url" hidden href="" style="color:beige">&#10697;</a></h1>
               </p>
@@ -63,7 +146,8 @@
       </div>
     </div>
       <script>
-       var postContainer = null;
+        console.log('Script loading');
+        var postContainer = null;
         var postTemplate = null;
 
         const REQUEST_TYPE = {
@@ -71,8 +155,14 @@
           ADD_REPLY: "ADD_REPLY",
           ADD_LIKE_DISLIKE: "ADD_LIKE_DISLIKE",
           DELETE_LIKE_DISLIKE: "DELETE_LIKE_DISLIKE",
-          UPDATE_LIKE_DISLIKE: "UPDATE_LIKE_DISLIKE"
-      
+          UPDATE_LIKE_DISLIKE: "UPDATE_LIKE_DISLIKE",
+          SIGNUP_USER: "SIGNUP_USER",
+          LOGIN_USER: "LOGIN_USER"
+        }
+        const PAGE = {
+          LOGIN: "LOGIN",
+          SIGNUP: "SIGNUP",
+          GET_POSTS: "GET_POSTS"
         }
         var ws = new WebSocket("wss://ws.yourtake.org/ws");
         var newPosts = new Map();
@@ -83,10 +173,14 @@
         window.onload = (event) => {
           postContainer = document.getElementById('postContainer')
           postTemplate = document.getElementById('post_template');
+        };
+
+        function loadPosts(){
+          console.log("OnLoad called");
           let getPosts = new Object();
           getPosts.type = REQUEST_TYPE.GET_POSTS;
           sendData(getPosts);
-        };
+        }
 
         function processClick(event) {
           console.log(event.type);
@@ -199,7 +293,17 @@
         //   event.currentTarget.hidden = true
         //   event.currentTarget.parentNode.previousElementSibling.hidden = true;
         // }
+        ws.onopen = function () {
+          console.log('wss is open');
+          var t = setInterval(function(){
+            if (ws.readyState != 1) {
+                clearInterval(t);
+                return;
+            }
+          }, 55000);
+        };
         function sendData(event){
+            console.log("sendData called");
             if(ws.readyState){
               console.log('sending event type:' + event.type);
               ws.send(JSON.stringify(event));
@@ -228,6 +332,24 @@
               } else {
                 console.log("post creation failed");
               }
+            } else if (jsonObject['type'] == REQUEST_TYPE.SIGNUP_USER){
+              if(jsonObject['status'] == 'SUCCESS'){
+                console.log("signup successful!");
+                let signup_form_node = document.getElementById("signup_form");
+                signup_form_node.hidden = true;
+                loadPosts();
+              } else {
+                alert("signup request failed, please try again later");
+              }
+            } else if (jsonObject['type'] == REQUEST_TYPE.LOGIN_USER){
+              if(jsonObject['status'] == 'SUCCESS'){
+                console.log("login successful!");
+                let login_form_node = document.getElementById("login_form");
+                login_form_node.hidden = true;
+                loadPosts();
+              } else {
+                alert("login request failed, please try again later");
+              }
             } else if (jsonObject['type'] == REQUEST_TYPE.GET_POSTS){
               var posts = jsonObject['posts'];
               for (var index in posts) {
@@ -237,6 +359,7 @@
                   let thread_id = post['thread_id'];
                   let post_level = post['post_level'];              
                   let post_text = post['text'];
+                  let user_name = post['user_name'];
                   let post_url =  post['url'];
                   let post_replies = 0;
                   let post_likes = post['likes'];
@@ -244,6 +367,7 @@
                   let post_like_dislike = post['like_dislike'];
                   let post_views = post['views'];
                   let parent_post_id = post['parent_post_id'];
+                  let post_timestamp = post['timestamp'];
 
                   let postNode = postTemplate.cloneNode(true);
                   postNode.id = post_id;
@@ -253,6 +377,8 @@
                   postNode.dataset.postLevel = post_level;
                   postNode.dataset.likeDislike = post_like_dislike;
                   postNode.dataset.parentPostId = parent_post_id;
+                  postNode.querySelector("#user_name").innerHTML = user_name;
+                  postNode.querySelector("#post_timestamp").innerHTML = post_timestamp;
                   postNode.querySelector("#post_text").innerHTML = post_text;
                   if(post_url != null ) {
                     postNode.querySelector("#post_url").setAttribute("href", post_url);
@@ -279,6 +405,92 @@
             }
         };
 
+        function validateSignup() {
+          let signup_form_node = document.getElementById("signup_form");
+          let password = signup_form_node.querySelector("#password").value;
+          let confirmPassword = signup_form_node.querySelector("#confirm_password").value;
+          if (password && confirmPassword && password !== confirmPassword) {
+            alert("The passwords do not match.");
+            signup_form_node.querySelector("#signup_button").disabled = true
+            return false;
+          } else if(password && password.length < 8){
+            alert("The passsword must be atleast 8 characters long")
+          }
+          let user_name = signup_form_node.querySelector("#user_name").value;
+          let user_email = signup_form_node.querySelector("#user_email").value;
+          if (user_name && user_email) {
+            if(validateEmail(user_email)) {
+              signup_form_node.querySelector("#signup_button").disabled = false
+              return true;
+            } else {
+              alert("Please enter a valid email id.");
+              signup_form_node.querySelector("#signup_button").disabled = true
+            }
+          }
+          return false;
+        }  
+
+        function validateEmail(user_email){
+          if(user_email && user_email.indexOf('@') != -1 
+                && user_email.indexOf('@') < user_email.indexOf('.') 
+                && user_email.indexOf('.') < (user_email.length -1)) {
+                  return true;
+          } else {
+            return false;
+          }
+        }
+
+        function processSignup() {
+          if(validateSignup()){
+            let signup_form_node = document.getElementById("signup_form");
+            let password = signup_form_node.querySelector("#password").value;
+            let user_name = signup_form_node.querySelector("#user_name").value;
+            let user_email = signup_form_node.querySelector("#user_email").value;
+            let signupUser = new Object();
+            signupUser.type = REQUEST_TYPE.SIGNUP_USER;
+            signupUser.user_name = user_name;
+            signupUser.password = password;
+            signupUser.user_email = user_email;
+            sendData(signupUser);
+          }
+        }  
+
+        function processLogin() {
+            let signup_form_node = document.getElementById("login_form");
+            let password = signup_form_node.querySelector("#password").value;
+            let user_email = signup_form_node.querySelector("#user_email").value;
+            if(password && password.length < 8){
+              alert("The passsword must be atleast 8 characters long")
+              return false;
+            } 
+            if(!validateEmail(user_email)){
+              return false;
+            }
+            if(password && user_email){
+              let loginUser = new Object();
+              loginUser.type = REQUEST_TYPE.LOGIN_USER;
+              loginUser.password = password;
+              loginUser.user_email = user_email;
+              sendData(loginUser);
+            }
+            return true;
+        }
+
+
+        function displayPage(page) {
+          let signup_form_node = document.getElementById("signup_form");
+           let login_form_node = document.getElementById("login_form");
+          if(page == PAGE.LOGIN) {
+            console.log("switching to login page");
+
+            signup_form_node.hidden = true;
+            login_form.hidden = false;
+          } else if (page == PAGE.SIGNUP){
+            console.log("switching to signup page");
+            signup_form_node.hidden = false;
+            login_form.hidden = true;
+          }
+        }  
     </script>
   </body>
 </html>
