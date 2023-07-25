@@ -16,46 +16,54 @@
     width: 100px;
   }
 
+  .rounded-xl {
+    border-radius: 1.5rem;
+  }
+
+  .bg-post {
+    background-color: #2c271e;
+  }
+
+  .bg-reply {
+    background-color: #3b3730;
+  }
+
+  .post-border {
+    border-color: #f0e354;
+  }
+
 </style>
   <body>
-    <div class="container-fluid sticky-top bg-dark align-items-center text-white">
-<!--       <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-          <img src="yt.png" alt="" width="40" height="40">
-        </a>
-        <a class="navbar-brand col-4 mb-0 h1 active" aria-current="page" href="#">News Feed</a>
-        <a class="navbar-brand col-4 mb-0 h1" href="#">Your Timeline</a>
-        <a class="navbar-brand col-4 mb-0 h1" href="#">Search</a>
-      </div> -->
-      <div class="row d-flex no-gutters">
-        <div class="col-auto ">
-          <img src="yt.png" alt="" width="80" height="80">
+    <div class="container-fluid sticky-top bg-dark align-items-center text-white" id="menu_container">
+      <div class="row d-flex no-gutters" onclick="processMenuClick(event)" >
+        <div class="col-auto">
+          <img src="yt.png" alt="" width="70" height="70">
         </div>
 
-        <div class="col offset-md-1 m-1 d-flex align-items-center justify-content-center text-white bg-gradient ">
-          <h2>News Feed</h2>
+        <div class="col m-1 p-2 d-flex align-items-center justify-content-center bg-gradient " id="feed_div">
+          <img src="feed_selected.png" height="30" width="30" class="rounded float-start m-2" alt="..."  id="feed_img">
         </div>
 
-        <div class="col m-1 d-flex align-items-center justify-content-center   bg-gradient ">
-          <h2>Your Timeline</h2>
+        <div class="col m-1 p-2 d-flex align-items-center justify-content-center   bg-gradient " id="posts_div">
+          <img src="posts.png" height="30" width="30" class="rounded float-start m-2" alt="..." id="posts_img">
         </div>
 
-        <div class="col m-1 d-flex align-items-center justify-content-center bg-gradient ">
-          <h2>Search</h2>
+        <div class="col m-1  p-2 d-flex align-items-center justify-content-center bg-gradient ">
+          <img src="search.png" height="30" width="30" class="rounded float-start m-2" alt="..." id="search_img">
         </div>
       </div>
     </div>
-    <div class="container" id="signup_form">
-      <div class="row">
+    <div class="container-fluid bg-secondary vh-100 align-items-center text-white " id="signup_form" hidden>
+      <div class="row ">
         <div class="col-md-6">
           <h2>Signup</h2>
           <form action="" method="post">
             <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
+            <label for="user_email" class="form-label">Email</label>
             <input type="email" class="form-control" id="user_email">
             </div>
             <div class="mb-3">
-              <label for="username" class="form-label">User Name</label>
+              <label for="user_name" class="form-label">User Name</label>
               <input type="text" class="form-control" id="user_name">
               </div>
             <div class="mb-3">
@@ -66,16 +74,16 @@
             <label for="confirm_password" class="form-label">Confirm Password</label>
             <input type="password" class="form-control" id="confirm_password" name="confirm_password" onfocusout="validateSignup()">
             </div>
-            <button type="button" class="btn btn-primary" id="signup_button" onclick="processSignup(event)">Sign Up</button>
+            <button type="button" class="btn btn-dark" id="signup_button" onclick="processSignup(event)">Sign Up</button>
             <div class="mb-3">
-              Already have an account? <a href="javascript:void(0);" onclick="displayPage(PAGE.LOGIN)">log in</a> instead.
+              Already have an account? <a href="javascript:void(0);" style="color:beige" onclick="displayPage(PAGE.LOGIN)">log in</a> instead.
             </div>
             </form>
         </div>
       </div>
     </div>
-    <div class="container " id="login_form" hidden>
-      <div class="row">
+    <div class="container-fluid bg-secondary vh-100 align-items-center text-white " id="login_form" hidden>
+      <div class="row ">
         <div class="col-md-6">
           <h2>Login</h2>
           <form action="" method="post">
@@ -87,12 +95,12 @@
             <label for="password" class="form-label">Password</label>
             <input type="password" class="form-control" id="password" name="password">
             </div>
-            <button type="button" class="btn btn-primary" id="login_button" onclick="processLogin(event)">Login</button>
+            <button type="button" class="btn btn-dark" id="login_button" onclick="processLogin(event)">Login</button>
             <div class="mb-3">
-            <a href="javascript:void(0);">Forgot password?</a>
+            <a href="javascript:void(0);" style="color:beige" >Forgot password?</a>
             </div>
             <div class="mb-3">
-              Dont have an account? <a href="javascript:void(0);" onclick="displayPage(PAGE.SIGNUP)">Sign Up</a> instead.
+              Dont have an account? <a href="javascript:void(0);" style="color:beige" onclick="displayPage(PAGE.SIGNUP)">Sign Up</a> instead.
             </div>
             </form>
         </div>
@@ -106,42 +114,65 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous">
     </script>
     <div class="container-fluid bg-warning" id="postContainer">
-      <div class = 'pb-1' hidden id="post_template" onclick="processClick(event)" data-thread-id = "" data-post-level = "" data-like-dislike = "" data-parent-post-id = "">
-        <div class="row bg-secondary">
-          <div class="col text-white">
-              <p class="h2 text-justify"> 
-                    <img id="post_logo" src="" class="logo rounded float-start m-2" alt="...">      
-                    <h1 id="user_name" style="display:inline"></h1><br>  
-                    <h2 id="post_timestamp" style="display:inline"></h2><br>  
-                    <h2 id="post_text" style="display:inline"></h2>
-                    <h1 style="display:inline"><a id="post_url" hidden href="" style="color:beige">&#10697;</a></h1>
-              </p>
-            </div>
+      <div class = 'pb-1 ' hidden id="post_template" onclick="processClick(event)" data-thread-id = "" data-post-level = "" data-like-dislike = "" data-parent-post-id = "">
+        <div class="row bg-post ">
+          <div class="col text-white ">
+            <p class="h3 text-justify "> 
+                  <img id="post_logo" height="60" width="60" src="" class="rounded float-start mt-3 mx-1 " alt="...">      
+                  <h4 id="user_name" style="display:inline"></h4><br>  
+                  <h4 id="post_timestamp" style="display:inline"></h4><br>  
+                  <h5 id="post_text" style="display:inline"></h5>
+                  <h4 style="display:inline"><a id="post_url" hidden href="" style="color:beige">&#10697;</a></h4>
+            </p>
           </div>
-          <div class="row bg-secondary">
-            <div class="col" >
-            </div>
-            <div class="col text-white">
-              <img src="reply.png" height="50" width="50" class="rounded float-start m-2" alt="..." onclick="" id="replies_img"><h1 id="post_replies"></h1> 
-            </div>
-            <div class="col text-white">
-              <img src="like.png" height="50" width="50" class="rounded float-start m-2" alt="..." onclick="" id="likes_img"><h1 id="post_likes"></h1>  
-            </div>
-            <div class="col text-white">
-              <img src="dislike.png" height="50" width="50" class="rounded float-start m-2" alt="..." onclick="" id="dislikes_img"><h1 id="post_dislikes"></h1> 
-            </div>
-            <div class="col text-white">
-              <img src="views.png" height="50" width="50" class="rounded float-start m-2" alt="..."  id="views_img"><h1 id="post_views"></h1> 
-            </div>               
         </div>
-        <div id="replyButtons" hidden class="row bg-secondary">
-          <div class="col d-flex justify-content-between" >
-            <button class="btn text-white" type="button" id="replyCancel" style="font-size: 30px; background-color: rgba(24, 22, 14, 0.634);">Cancel</button>
-            <button class="btn text-white" type="button" id="replySubmit" style="font-size: 30px; background-color: rgba(24, 22, 14, 0.634);">Post</button>
+        <div id="summary" hidden class="row bg-post">
+          <div class="col " >
+            <h5 id="summaryText" class="text-white p-2 border border-3 rounded-xl border-warning bg-dark"></h5> 
+          </div>
+        </div>
+        <div class="row bg-post pb-2">
+          <div class="col text-white d-flex align-items-center" >
+            <img src="read.png" height="25" width="25" class="rounded float-start m-1" alt="..." onclick="" id="read_img">
+          </div>          
+          <div class="col text-white d-flex align-items-center" >
+            <img src="reply.png" height="25" width="25" class="rounded float-start m-1" alt="..." onclick="" id="replies_img"><h5 id="post_replies"></h5> 
+          </div>
+          <div class="col text-white  d-flex align-items-center">
+            <img src="like.png" height="25" width="25" class="rounded float-start m-1" alt="..." onclick="" id="likes_img"><h5 id="post_likes"></h5>  
+          </div>
+          <div class="col text-white  d-flex align-items-center">
+            <img src="dislike.png" height="25" width="25" class="rounded float-start m-1" alt="..." onclick="" id="dislikes_img"><h5 id="post_dislikes"></h5> 
+          </div>
+          <div class="col text-white  d-flex align-items-center">
+            <img src="views.png" height="25" width="25" class="rounded float-start m-1" alt="..."  id="views_img"><h5 id="post_views"></h5> 
+          </div>               
+        </div>
+        <div id="replyButtons" hidden class="row p-1 bg-post">
+          <div class="col m-2 d-flex justify-content-between" >
+            <button class="btn text-white" type="button" id="replyCancel" style="font-size: 20px; background-color: rgba(24, 22, 14, 0.634);">Cancel</button>
+            <button class="btn text-white" type="button" id="replySubmit" style="font-size: 20px; background-color: rgba(24, 22, 14, 0.634);">Post</button>
           </div>    
         </div>
-        <div class="row p-3 bg-secondary">
-          <textarea class="form-control text-white border-0" hidden id="replyText" rows="10" style="font-size: 30px; background-color: rgba(128, 128, 128, 0.948);"></textarea>
+        <div class="row p-1 bg-reply " hidden id="replyTextRow">
+          <div class="col " >
+            <textarea class="form-control text-white p-2 border border-3 rounded-xl border-warning bg-dark"  id="replyText" rows="10" style="font-size: 20px; "></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid fixed-bottom bg-dark align-items-center text-white" hidden id="login_signup">
+      <div class="row d-flex no-gutters">
+        <div class="col-5 offset-md-1  d-flex align-items-center  justify-content-center text-white" style="height: 70px">
+          <h5>What's your take?</h5>
+        </div>
+
+        <div class="col m-1 d-flex align-items-center justify-content-center   bg-gradient " onclick="displayPage(PAGE.LOGIN)">
+          <h5>login</h5>
+        </div>
+
+        <div class="col m-1 d-flex align-items-center justify-content-center bg-gradient " onclick="displayPage(PAGE.SIGNUP)">
+          <h5>sign up</h5>
         </div>
       </div>
     </div>
@@ -149,7 +180,10 @@
         console.log('Script loading');
         var postContainer = null;
         var postTemplate = null;
-
+        var menuContainer = null;
+        var loginSignupContainer = null;
+        var userName = null;
+        var userID = null;
         const REQUEST_TYPE = {
           GET_POSTS: "GET_POSTS",
           ADD_REPLY: "ADD_REPLY",
@@ -173,6 +207,13 @@
         window.onload = (event) => {
           postContainer = document.getElementById('postContainer')
           postTemplate = document.getElementById('post_template');
+          menuContainer = document.getElementById('post_template');
+          loginSignupContainer = document.getElementById('login_signup');
+          loadPosts();
+          if(!window.sessionStorage.getItem("user_email")){
+            let signup_form_node = document.getElementById("login_signup");
+            signup_form_node.hidden = false;
+          };
         };
 
         function loadPosts(){
@@ -182,14 +223,38 @@
           sendData(getPosts);
         }
 
+        function processMenuClick(event) {
+          console.log(event.type);
+          let menuDOM = event.currentTarget;
+          let postsImg = menuDOM.querySelector("#posts_img");
+          let feedImg = menuDOM.querySelector("#feed_img");
+
+          if(event.target.id == "posts_div" || event.target.id == "posts_img"){
+            postsImg.src = 'posts_selected.png';
+            feedImg.src = 'feed.png'
+            postContainer.hidden = true;
+          } else if(event.target.id == "feed_div" || event.target.id == "feed_img"){
+            postsImg.src = 'posts.png';
+            feedImg.src = 'feed_selected.png';
+            postContainer.hidden = false;
+          }
+        }
+
         function processClick(event) {
           console.log(event.type);
           let postDOM = event.currentTarget;
-          if(event.target.id == "replies_img"){
-            let replyText = postDOM.querySelector("#replyText");
+          if(event.target.id == "read_img"){
+            let summary = postDOM.querySelector("#summary");
+            let summaryText = postDOM.querySelector("#summaryText");
+            if(summaryText.innerHTML!=""){
+              summary.hidden = !summary.hidden;
+            }
+
+          } else if(event.target.id == "replies_img"){
+            let replyTextRow = postDOM.querySelector("#replyTextRow");
             let replyButtons = postDOM.querySelector("#replyButtons");
-            replyText.hidden = !replyText.hidden;
-            replyButtons.hidden = replyText.hidden;
+            replyTextRow.hidden = !replyTextRow.hidden;
+            replyButtons.hidden = replyTextRow.hidden;
           } else if(event.target.id == "likes_img" || event.target.id == "dislikes_img"){
             let postReply = new Object();
             postReply.post_id = postDOM.id;
@@ -257,6 +322,7 @@
             sendData(postReply);
 
           } else if (event.target.id == "replySubmit"){
+            let replyTextRow = postDOM.querySelector("#replyTextRow");
             let replyText = postDOM.querySelector("#replyText");
             let replyButtons = postDOM.querySelector("#replyButtons");
             let postReply = new Object();
@@ -264,13 +330,14 @@
             postReply.post_level = 1 + Number(postDOM.dataset.postLevel);
             postReply.text = replyText.value;
             postReply.type = REQUEST_TYPE.ADD_REPLY;
+            postReply.user_id = userID;
             postReply.parent_post_id = postDOM.id;
             postReply.correlation_id = Date.now();
             //ws.send(JSON.stringify(postReply));
             console.log("sending request :" + postReply)
             sendData(postReply);
-            replyText.hidden = !replyText.hidden;
-            replyButtons.hidden = replyText.hidden;
+            replyTextRow.hidden = !replyTextRow.hidden;
+            replyButtons.hidden = replyTextRow.hidden;
             
             let postNode = postTemplate.cloneNode(true);
             postNode.id = postReply.correlation_id;
@@ -334,19 +401,25 @@
               }
             } else if (jsonObject['type'] == REQUEST_TYPE.SIGNUP_USER){
               if(jsonObject['status'] == 'SUCCESS'){
-                console.log("signup successful!");
+                window.sessionStorage.setItem("user_email", jsonObject['user_email']);
+                console.log("signup successful! "+jsonObject['user_name']);
+                userName = jsonObject['user_name'];
+                userID = jsonObject['user_id'];
                 let signup_form_node = document.getElementById("signup_form");
-                signup_form_node.hidden = true;
-                loadPosts();
+                loginSignupContainer.hidden = true;
+                displayPage(PAGE.GET_POSTS);
               } else {
                 alert("signup request failed, please try again later");
               }
             } else if (jsonObject['type'] == REQUEST_TYPE.LOGIN_USER){
               if(jsonObject['status'] == 'SUCCESS'){
-                console.log("login successful!");
+                window.sessionStorage.setItem("user_email", jsonObject['user_email']);
+                console.log("login successful! "+jsonObject['user_name']);
+                userName = jsonObject['user_name'];
+                userID = jsonObject['user_id'];
                 let login_form_node = document.getElementById("login_form");
-                login_form_node.hidden = true;
-                loadPosts();
+                loginSignupContainer.hidden = true;
+                displayPage(PAGE.GET_POSTS);
               } else {
                 alert("login request failed, please try again later");
               }
@@ -368,6 +441,7 @@
                   let post_views = post['views'];
                   let parent_post_id = post['parent_post_id'];
                   let post_timestamp = post['timestamp'];
+                  let news_text_summary = post['news_text_summary'];
 
                   let postNode = postTemplate.cloneNode(true);
                   postNode.id = post_id;
@@ -399,6 +473,7 @@
                   postNode.querySelector("#post_likes").innerHTML = post_likes;
                   postNode.querySelector("#post_dislikes").innerHTML = post_dislikes;
                   postNode.querySelector("#post_views").innerHTML = post_views;
+                  postNode.querySelector("#summaryText").innerHTML = news_text_summary;
 
                   postContainer.appendChild(postNode);
               }
@@ -478,6 +553,7 @@
 
 
         function displayPage(page) {
+
           let signup_form_node = document.getElementById("signup_form");
            let login_form_node = document.getElementById("login_form");
           if(page == PAGE.LOGIN) {
@@ -485,12 +561,19 @@
 
             signup_form_node.hidden = true;
             login_form.hidden = false;
+            postContainer.hidden = true;
           } else if (page == PAGE.SIGNUP){
             console.log("switching to signup page");
             signup_form_node.hidden = false;
             login_form.hidden = true;
-          }
-        }  
+            postContainer.hidden = true;
+          } else if (page == PAGE.GET_POSTS){
+            console.log("switching to GET_POSTS page");
+            signup_form_node.hidden = true;
+            login_form.hidden = true;
+            postContainer.hidden = false;
+          }  
+        }
     </script>
   </body>
 </html>
