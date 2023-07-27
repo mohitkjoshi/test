@@ -201,7 +201,8 @@
         var ws = new WebSocket("wss://ws.yourtake.org/ws");
         var newPosts = new Map();
 
-        var reuters_logo = "https://companieslogo.com/img/orig/TRI-1c1a5996.png?t=1647958921"
+        var reuters_logo = "https://companieslogo.com/img/orig/TRI-1c1a5996.png?t=1647958921";
+        var NYT_logo = "NYT.png";
         var post_logo = "https://picsum.photos/100/100"; 
 
         window.onload = (event) => {
@@ -460,7 +461,12 @@
                   } 
 
                   if(post_level == 0 ){
-                    postNode.querySelector("#post_logo").setAttribute("src", reuters_logo);
+                    if(user_name == "New York Times") {
+                      postNode.querySelector("#post_logo").setAttribute("src", NYT_logo);
+                    } else {
+                      postNode.querySelector("#post_logo").setAttribute("src", reuters_logo);
+                    }
+
                   } else {
                     postNode.querySelector("#post_logo").setAttribute("src", post_logo);
                   }
