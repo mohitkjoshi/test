@@ -206,6 +206,7 @@
         var post_logo = "https://picsum.photos/100/100"; 
 
         window.onload = (event) => {
+          alert("windows onload not working");
           postContainer = document.getElementById('postContainer')
           postTemplate = document.getElementById('post_template');
           menuContainer = document.getElementById('post_template');
@@ -214,7 +215,7 @@
           if(!window.sessionStorage.getItem("user_email")){
             let signup_form_node = document.getElementById("login_signup");
             signup_form_node.hidden = false;
-          };
+          } 
         };
 
         function loadPosts(){
@@ -225,6 +226,7 @@
         }
 
         function processMenuClick(event) {
+          
           console.log(event.type);
           let menuDOM = event.currentTarget;
           let postsImg = menuDOM.querySelector("#posts_img");
@@ -252,11 +254,21 @@
             }
 
           } else if(event.target.id == "replies_img"){
+            userID = window.sessionStorage.getItem("user_id");
+            if(!userID){
+              alert("Please sign up to make a comment!");
+              return;
+            }
             let replyTextRow = postDOM.querySelector("#replyTextRow");
             let replyButtons = postDOM.querySelector("#replyButtons");
             replyTextRow.hidden = !replyTextRow.hidden;
             replyButtons.hidden = replyTextRow.hidden;
           } else if(event.target.id == "likes_img" || event.target.id == "dislikes_img"){
+            userID = window.sessionStorage.getItem("user_id");
+            if(!userID){
+              alert("Please sign up to like/dislike a post");
+              return;
+            }
             let postReply = new Object();
             postReply.post_id = postDOM.id;
             postReply.user_id = 101;
@@ -382,12 +394,14 @@
                 setTimeout(sendData, 500, event);
             }
         }     
+
+
+   
         // function sendMessage(event) {
         //     let importNews = new Object();
         //     importNews.type = 'IMPORT_NEWS';
         //     ws.send(JSON.stringify(importNews));
         // }
-
         ws.onmessage = function(event) {
             var jsonObject = JSON.parse(event.data);
             if (jsonObject['type'] == REQUEST_TYPE.ADD_REPLY){
@@ -403,6 +417,7 @@
             } else if (jsonObject['type'] == REQUEST_TYPE.SIGNUP_USER){
               if(jsonObject['status'] == 'SUCCESS'){
                 window.sessionStorage.setItem("user_email", jsonObject['user_email']);
+                window.sessionStorage.setItem("user_id", jsonObject['user_id']);
                 console.log("signup successful! "+jsonObject['user_name']);
                 userName = jsonObject['user_name'];
                 userID = jsonObject['user_id'];
@@ -415,6 +430,7 @@
             } else if (jsonObject['type'] == REQUEST_TYPE.LOGIN_USER){
               if(jsonObject['status'] == 'SUCCESS'){
                 window.sessionStorage.setItem("user_email", jsonObject['user_email']);
+                window.sessionStorage.setItem("user_id", jsonObject['user_id']);
                 console.log("login successful! "+jsonObject['user_name']);
                 userName = jsonObject['user_name'];
                 userID = jsonObject['user_id'];
