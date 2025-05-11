@@ -45,3 +45,16 @@ button.btn-primary.mt-1,
 button.btn-light.btn-sm.mt-1 {
   display: none !important;
 }
+
+
+/* For the email input */
+#feedbackEmail::placeholder {
+  color: white !important; /* Use !important to override other styles if necessary */
+  opacity: 0.8; /* Adjust opacity for better readability if needed */
+}
+
+/* For the textarea */
+#feedbackText::placeholder {
+  color: white !important; /* Use !important to override other styles if necessary */
+  opacity: 0.8; /* Adjust opacity for better readability if needed */
+}
