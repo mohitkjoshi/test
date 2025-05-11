@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -8,596 +7,701 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <title>Hello, world!</title>
+    <title>YourTake - Your take on news!</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   </head>
 <style>
-  img.logo {
-    height: 100px;
-    width: 100px;
+  :root {
+    --twitter-blue: #1DA1F2;
+    --twitter-black: #14171A;
+    --twitter-dark-gray: #657786;
+    --twitter-light-gray: #AAB8C2;
+    --twitter-extra-light-gray: #E1E8ED;
+    --twitter-background: #F5F8FA;
   }
 
-  .rounded-xl {
-    border-radius: 1.5rem;
+  body {
+    background-color: var(--twitter-background);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   }
 
-  .bg-post {
-    background-color: #2c271e;
+  .navbar {
+    background-color: white;
+    border-bottom: 1px solid var(--twitter-extra-light-gray);
+    padding: 0.5rem 1rem;
   }
 
-  .bg-reply {
-    background-color: #3b3730;
+  .nav-link {
+    color: var(--twitter-black);
+    font-weight: 700;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    transition: background-color 0.2s;
   }
 
-  .post-border {
-    border-color: #f0e354;
+  .nav-link:hover {
+    background-color: var(--twitter-extra-light-gray);
   }
 
+  .nav-link.active {
+    color: var(--twitter-blue);
+  }
+
+  .post {
+    background-color: white;
+    border: 1px solid var(--twitter-extra-light-gray);
+    border-radius: 16px;
+    margin-bottom: 1rem;
+    padding: 1rem;
+  }
+
+  .post-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .post-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    margin-right: 1rem;
+  }
+
+  .post-content {
+    margin-left: 58px;
+  }
+
+  .post-username {
+    font-weight: 700;
+    color: var(--twitter-black);
+    margin-right: 0.5rem;
+  }
+
+  .post-timestamp {
+    color: var(--twitter-dark-gray);
+    font-size: 0.9rem;
+  }
+
+  .post-text {
+    color: var(--twitter-black);
+    margin: 0.5rem 0;
+    line-height: 1.5;
+  }
+
+  .post-actions {
+    display: flex;
+    justify-content: space-between;
+    max-width: 425px;
+    margin-top: 0.5rem;
+    color: var(--twitter-dark-gray);
+  }
+
+  .post-action {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 9999px;
+    transition: background-color 0.2s;
+  }
+
+  .post-action:hover {
+    background-color: var(--twitter-extra-light-gray);
+  }
+
+  .post-action i {
+    font-size: 1.2rem;
+  }
+
+  .post-action-count {
+    font-size: 0.9rem;
+  }
+
+  .login-signup-container {
+    background-color: white;
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 400px;
+    margin: 2rem auto;
+  }
+
+  .form-control {
+    border-radius: 9999px;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--twitter-extra-light-gray);
+  }
+
+  .form-control:focus {
+    border-color: var(--twitter-blue);
+    box-shadow: 0 0 0 0.2rem rgba(29, 161, 242, 0.25);
+  }
+
+  .btn-primary {
+    background-color: var(--twitter-blue);
+    border: none;
+    border-radius: 9999px;
+    padding: 0.75rem 2rem;
+    font-weight: 700;
+  }
+
+  .btn-primary:hover {
+    background-color: #1a91da;
+  }
+
+  .auth-link {
+    color: var(--twitter-blue);
+    text-decoration: none;
+  }
+
+  .auth-link:hover {
+    text-decoration: underline;
+  }
 </style>
   <body>
-    <div class="container-fluid sticky-top bg-dark align-items-center text-white" id="menu_container">
-      <div class="row d-flex no-gutters" onclick="processMenuClick(event)" >
-        <div class="col-auto">
-          <img src="yt.png" alt="" width="70" height="70">
-        </div>
-
-        <div class="col m-1 p-2 d-flex align-items-center justify-content-center bg-gradient " id="feed_div">
-          <img src="feed_selected.png" height="30" width="30" class="rounded float-start m-2" alt="..."  id="feed_img">
-        </div>
-
-        <div class="col m-1 p-2 d-flex align-items-center justify-content-center   bg-gradient " id="posts_div">
-          <img src="posts.png" height="30" width="30" class="rounded float-start m-2" alt="..." id="posts_img">
-        </div>
-
-        <div class="col m-1  p-2 d-flex align-items-center justify-content-center bg-gradient ">
-          <img src="search.png" height="30" width="30" class="rounded float-start m-2" alt="..." id="search_img">
+    <nav class="navbar navbar-expand-lg sticky-top">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img src="yt.png" alt="YourTake" height="40">
+        </a>
+        <div class="d-flex align-items-center">
+          <a class="nav-link active" href="#" id="feed_div">
+            <i class="fas fa-home"></i>
+            <span class="ms-1">Home</span>
+          </a>
+          <a class="nav-link" href="#" id="posts_div">
+            <i class="fas fa-newspaper"></i>
+            <span class="ms-1">Posts</span>
+          </a>
+          <a class="nav-link" href="#" id="search_div">
+            <i class="fas fa-search"></i>
+            <span class="ms-1">Search</span>
+          </a>
         </div>
       </div>
-    </div>
-    <div class="container-fluid bg-secondary vh-100 align-items-center text-white " id="signup_form" hidden>
-      <div class="row ">
-        <div class="col-md-6">
-          <h2>Signup</h2>
-          <form action="" method="post">
-            <div class="mb-3">
-            <label for="user_email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="user_email">
-            </div>
-            <div class="mb-3">
-              <label for="user_name" class="form-label">User Name</label>
-              <input type="text" class="form-control" id="user_name">
+    </nav>
+
+    <div class="container mt-4">
+      <div class="row">
+        <div class="col-md-8 mx-auto">
+          <div id="postContainer">
+            <div class="post" hidden id="post_template" onclick="processClick(event)" data-thread-id="" data-post-level="" data-like-dislike="" data-parent-post-id="">
+              <div class="post-header">
+                <img id="post_logo" class="post-avatar" src="" alt="User avatar">
+                <div class="post-content">
+                  <span id="user_name" class="post-username"></span>
+                  <span id="post_timestamp" class="post-timestamp"></span>
+                </div>
               </div>
-            <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password" name="password" onfocusout="validateSignup()">
+              <div class="post-text" id="post_text"></div>
+              <a id="post_url" href="" class="text-decoration-none" hidden>
+                <i class="fas fa-external-link-alt"></i>
+              </a>
+              <div id="summary" hidden class="post-text bg-light p-3 rounded">
+                <h5 id="summaryText"></h5>
+              </div>
+              <div class="post-actions">
+                <div class="post-action" id="read_action">
+                  <i class="fas fa-book-reader"></i>
+                  <span class="post-action-count">Read</span>
+                </div>
+                <div class="post-action" id="replies_action">
+                  <i class="fas fa-comment"></i>
+                  <span class="post-action-count" id="post_replies">0</span>
+                </div>
+                <div class="post-action" id="likes_action">
+                  <i class="fas fa-heart"></i>
+                  <span class="post-action-count" id="post_likes">0</span>
+                </div>
+                <div class="post-action" id="dislikes_action">
+                  <i class="fas fa-thumbs-down"></i>
+                  <span class="post-action-count" id="post_dislikes">0</span>
+                </div>
+                <div class="post-action" id="views_action">
+                  <i class="fas fa-eye"></i>
+                  <span class="post-action-count" id="post_views">0</span>
+                </div>
+              </div>
+              <div id="replyButtons" hidden class="mt-3">
+                <div class="d-flex justify-content-end gap-2">
+                  <button class="btn btn-outline-secondary" id="replyCancel">Cancel</button>
+                  <button class="btn btn-primary" id="replySubmit">Reply</button>
+                </div>
+              </div>
+              <div id="replyTextRow" hidden class="mt-3">
+                <textarea class="form-control" id="replyText" rows="3" placeholder="What's happening?"></textarea>
+              </div>
             </div>
-            <div class="mb-3">
-            <label for="confirm_password" class="form-label">Confirm Password</label>
-            <input type="password" class="form-control" id="confirm_password" name="confirm_password" onfocusout="validateSignup()">
-            </div>
-            <button type="button" class="btn btn-dark" id="signup_button" onclick="processSignup(event)">Sign Up</button>
-            <div class="mb-3">
-              Already have an account? <a href="javascript:void(0);" style="color:beige" onclick="displayPage(PAGE.LOGIN)">log in</a> instead.
-            </div>
-            </form>
-        </div>
-      </div>
-    </div>
-    <div class="container-fluid bg-secondary vh-100 align-items-center text-white " id="login_form" hidden>
-      <div class="row ">
-        <div class="col-md-6">
-          <h2>Login</h2>
-          <form action="" method="post">
-            <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="user_email">
-            </div>
-            <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password" name="password">
-            </div>
-            <button type="button" class="btn btn-dark" id="login_button" onclick="processLogin(event)">Login</button>
-            <div class="mb-3">
-            <a href="javascript:void(0);" style="color:beige" >Forgot password?</a>
-            </div>
-            <div class="mb-3">
-              Dont have an account? <a href="javascript:void(0);" style="color:beige" onclick="displayPage(PAGE.SIGNUP)">Sign Up</a> instead.
-            </div>
-            </form>
-        </div>
-      </div>
-    </div>
-    <!-- <h1>Your take on news!</h1>
-    <form action="" onsubmit="sendMessage(event)">
-        <input type="text" id="messageText" autocomplete="off"/>
-        <button>Read News</button>
-    </form> -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous">
-    </script>
-    <div class="container-fluid bg-warning" id="postContainer">
-      <div class = 'pb-1 ' hidden id="post_template" onclick="processClick(event)" data-thread-id = "" data-post-level = "" data-like-dislike = "" data-parent-post-id = "">
-        <div class="row bg-post ">
-          <div class="col text-white ">
-            <p class="h3 text-justify "> 
-                  <img id="post_logo" height="60" width="60" src="" class="rounded float-start mt-3 mx-1 " alt="...">      
-                  <h4 id="user_name" style="display:inline"></h4><br>  
-                  <h4 id="post_timestamp" style="display:inline"></h4><br>  
-                  <h5 id="post_text" style="display:inline"></h5>
-                  <h4 style="display:inline"><a id="post_url" hidden href="" style="color:beige">&#10697;</a></h4>
-            </p>
-          </div>
-        </div>
-        <div id="summary" hidden class="row bg-post">
-          <div class="col " >
-            <h5 id="summaryText" class="text-white p-2 border border-3 rounded-xl border-warning bg-dark"></h5> 
-          </div>
-        </div>
-        <div class="row bg-post pb-2">
-          <div class="col text-white d-flex align-items-center" >
-            <img src="read.png" height="25" width="25" class="rounded float-start m-1" alt="..." onclick="" id="read_img">
-          </div>          
-          <div class="col text-white d-flex align-items-center" >
-            <img src="reply.png" height="25" width="25" class="rounded float-start m-1" alt="..." onclick="" id="replies_img"><h5 id="post_replies"></h5> 
-          </div>
-          <div class="col text-white  d-flex align-items-center">
-            <img src="like.png" height="25" width="25" class="rounded float-start m-1" alt="..." onclick="" id="likes_img"><h5 id="post_likes"></h5>  
-          </div>
-          <div class="col text-white  d-flex align-items-center">
-            <img src="dislike.png" height="25" width="25" class="rounded float-start m-1" alt="..." onclick="" id="dislikes_img"><h5 id="post_dislikes"></h5> 
-          </div>
-          <div class="col text-white  d-flex align-items-center">
-            <img src="views.png" height="25" width="25" class="rounded float-start m-1" alt="..."  id="views_img"><h5 id="post_views"></h5> 
-          </div>               
-        </div>
-        <div id="replyButtons" hidden class="row p-1 bg-post">
-          <div class="col m-2 d-flex justify-content-between" >
-            <button class="btn text-white" type="button" id="replyCancel" style="font-size: 20px; background-color: rgba(24, 22, 14, 0.634);">Cancel</button>
-            <button class="btn text-white" type="button" id="replySubmit" style="font-size: 20px; background-color: rgba(24, 22, 14, 0.634);">Post</button>
-          </div>    
-        </div>
-        <div class="row p-1 bg-reply " hidden id="replyTextRow">
-          <div class="col " >
-            <textarea class="form-control text-white p-2 border border-3 rounded-xl border-warning bg-dark"  id="replyText" rows="10" style="font-size: 20px; "></textarea>
           </div>
         </div>
       </div>
     </div>
-    <div class="container-fluid fixed-bottom bg-dark align-items-center text-white" hidden id="login_signup">
-      <div class="row d-flex no-gutters">
-        <div class="col-5 offset-md-1  d-flex align-items-center  justify-content-center text-white" style="height: 70px">
-          <h5>What's your take?</h5>
-        </div>
 
-        <div class="col m-1 d-flex align-items-center justify-content-center   bg-gradient " onclick="displayPage(PAGE.LOGIN)">
-          <h5>login</h5>
+    <div class="login-signup-container" id="signup_form" hidden>
+      <h2 class="mb-4">Create your account</h2>
+      <form>
+        <div class="mb-3">
+          <input type="email" class="form-control" id="user_email" placeholder="Email">
         </div>
+        <div class="mb-3">
+          <input type="text" class="form-control" id="user_name" placeholder="Username">
+        </div>
+        <div class="mb-3">
+          <input type="password" class="form-control" id="password" placeholder="Password" onfocusout="validateSignup()">
+        </div>
+        <div class="mb-3">
+          <input type="password" class="form-control" id="confirm_password" placeholder="Confirm Password" onfocusout="validateSignup()">
+        </div>
+        <button type="button" class="btn btn-primary w-100 mb-3" id="signup_button" onclick="processSignup(event)">Sign up</button>
+        <div class="text-center">
+          Already have an account? <a href="javascript:void(0);" class="auth-link" onclick="displayPage(PAGE.LOGIN)">Log in</a>
+        </div>
+      </form>
+    </div>
 
-        <div class="col m-1 d-flex align-items-center justify-content-center bg-gradient " onclick="displayPage(PAGE.SIGNUP)">
-          <h5>sign up</h5>
+    <div class="login-signup-container" id="login_form" hidden>
+      <h2 class="mb-4">Log in to YourTake</h2>
+      <form>
+        <div class="mb-3">
+          <input type="email" class="form-control" id="user_email" placeholder="Email">
+        </div>
+        <div class="mb-3">
+          <input type="password" class="form-control" id="password" placeholder="Password">
+        </div>
+        <button type="button" class="btn btn-primary w-100 mb-3" id="login_button" onclick="processLogin(event)">Log in</button>
+        <div class="text-center">
+          <a href="javascript:void(0);" class="auth-link">Forgot password?</a>
+        </div>
+        <div class="text-center mt-3">
+          Don't have an account? <a href="javascript:void(0);" class="auth-link" onclick="displayPage(PAGE.SIGNUP)">Sign up</a>
+        </div>
+      </form>
+    </div>
+
+    <div class="fixed-bottom bg-white border-top" id="login_signup" hidden>
+      <div class="container py-3">
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <h5 class="mb-0">What's your take?</h5>
+          </div>
+          <div class="col-md-6 text-end">
+            <a href="javascript:void(0);" class="btn btn-outline-primary me-2" onclick="displayPage(PAGE.LOGIN)">Log in</a>
+            <a href="javascript:void(0);" class="btn btn-primary" onclick="displayPage(PAGE.SIGNUP)">Sign up</a>
+          </div>
         </div>
       </div>
     </div>
-      <script>
-        console.log('Script loading');
-        var postContainer = null;
-        var postTemplate = null;
-        var menuContainer = null;
-        var loginSignupContainer = null;
-        var userName = null;
-        var userID = null;
-        const REQUEST_TYPE = {
-          GET_POSTS: "GET_POSTS",
-          ADD_REPLY: "ADD_REPLY",
-          ADD_LIKE_DISLIKE: "ADD_LIKE_DISLIKE",
-          DELETE_LIKE_DISLIKE: "DELETE_LIKE_DISLIKE",
-          UPDATE_LIKE_DISLIKE: "UPDATE_LIKE_DISLIKE",
-          SIGNUP_USER: "SIGNUP_USER",
-          LOGIN_USER: "LOGIN_USER"
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+    <script>
+      console.log('Script loading');
+      var postContainer = null;
+      var postTemplate = null;
+      var menuContainer = null;
+      var loginSignupContainer = null;
+      var userName = null;
+      var userID = null;
+      const REQUEST_TYPE = {
+        GET_POSTS: "GET_POSTS",
+        ADD_REPLY: "ADD_REPLY",
+        ADD_LIKE_DISLIKE: "ADD_LIKE_DISLIKE",
+        DELETE_LIKE_DISLIKE: "DELETE_LIKE_DISLIKE",
+        UPDATE_LIKE_DISLIKE: "UPDATE_LIKE_DISLIKE",
+        SIGNUP_USER: "SIGNUP_USER",
+        LOGIN_USER: "LOGIN_USER"
+      }
+      const PAGE = {
+        LOGIN: "LOGIN",
+        SIGNUP: "SIGNUP",
+        GET_POSTS: "GET_POSTS"
+      }
+      var ws = new WebSocket("wss://ws.yourtake.org/ws");
+      var newPosts = new Map();
+
+      var reuters_logo = "https://companieslogo.com/img/orig/TRI-1c1a5996.png?t=1647958921";
+      var NYT_logo = "NYT.png";
+      var WAPO_logo = "WAPO.png";
+      var post_logo = "https://picsum.photos/100/100"; 
+
+      window.onload = (event) => {
+        postContainer = document.getElementById('postContainer')
+        postTemplate = document.getElementById('post_template');
+        menuContainer = document.getElementById('post_template');
+        loginSignupContainer = document.getElementById('login_signup');
+        loadPosts();
+        if(!window.sessionStorage.getItem("user_email")){
+          let signup_form_node = document.getElementById("login_signup");
+          signup_form_node.hidden = false;
+        } 
+      };
+
+      function loadPosts(){
+        console.log("OnLoad called");
+        let getPosts = new Object();
+        getPosts.type = REQUEST_TYPE.GET_POSTS;
+        sendData(getPosts);
+      }
+
+      function processMenuClick(event) {
+        
+        console.log(event.type);
+        let menuDOM = event.currentTarget;
+        let postsImg = menuDOM.querySelector("#posts_img");
+        let feedImg = menuDOM.querySelector("#feed_img");
+
+        if(event.target.id == "posts_div" || event.target.id == "posts_img"){
+          postsImg.src = 'posts_selected.png';
+          feedImg.src = 'feed.png'
+          postContainer.hidden = true;
+        } else if(event.target.id == "feed_div" || event.target.id == "feed_img"){
+          postsImg.src = 'posts.png';
+          feedImg.src = 'feed_selected.png';
+          postContainer.hidden = false;
         }
-        const PAGE = {
-          LOGIN: "LOGIN",
-          SIGNUP: "SIGNUP",
-          GET_POSTS: "GET_POSTS"
-        }
-        var ws = new WebSocket("wss://ws.yourtake.org/ws");
-        var newPosts = new Map();
+      }
 
-        var reuters_logo = "https://companieslogo.com/img/orig/TRI-1c1a5996.png?t=1647958921";
-        var NYT_logo = "NYT.png";
-        var WAPO_logo = "WAPO.png";
-        var post_logo = "https://picsum.photos/100/100"; 
+      function processClick(event) {
+        console.log(event.type);
+        let postDOM = event.currentTarget;
+        if(event.target.id == "read_img"){
+          let summary = postDOM.querySelector("#summary");
+          let summaryText = postDOM.querySelector("#summaryText");
+          if(summaryText.innerHTML!=""){
+            summary.hidden = !summary.hidden;
+          }
 
-        window.onload = (event) => {
-          postContainer = document.getElementById('postContainer')
-          postTemplate = document.getElementById('post_template');
-          menuContainer = document.getElementById('post_template');
-          loginSignupContainer = document.getElementById('login_signup');
-          loadPosts();
-          if(!window.sessionStorage.getItem("user_email")){
-            let signup_form_node = document.getElementById("login_signup");
-            signup_form_node.hidden = false;
+        } else if(event.target.id == "replies_img"){
+          userID = window.sessionStorage.getItem("user_id");
+          if(!userID){
+            alert("Please sign up to make a comment!");
+            return;
+          }
+          let replyTextRow = postDOM.querySelector("#replyTextRow");
+          let replyButtons = postDOM.querySelector("#replyButtons");
+          replyTextRow.hidden = !replyTextRow.hidden;
+          replyButtons.hidden = replyTextRow.hidden;
+        } else if(event.target.id == "likes_img" || event.target.id == "dislikes_img"){
+          userID = window.sessionStorage.getItem("user_id");
+          if(!userID){
+            alert("Please sign up to like/dislike a post");
+            return;
+          }
+          let postReply = new Object();
+          postReply.post_id = postDOM.id;
+          postReply.user_id = 101;
+          postReply.thread_id = postDOM.dataset.threadId;
+          let postLikes = postDOM.querySelector("#post_likes");
+          let postDislikes = postDOM.querySelector("#post_dislikes");
+          let postLikesImg = postDOM.querySelector("#likes_img");
+          let postDislikesImg = postDOM.querySelector("#dislikes_img");
+          let like_count = parseInt(postLikes.innerHTML);
+          let dislike_count = parseInt(postDislikes.innerHTML);
+ 
+          if(event.target.id == "likes_img" ){
+            postReply.like_dislike = 'L';
+            if(postDOM.dataset.likeDislike == 'L') {
+              postDOM.dataset.likeDislike = '';
+
+              postLikesImg.src = 'like.png';
+              postLikes.innerHTML = "" + (like_count - 1);
+              postReply.type = REQUEST_TYPE.DELETE_LIKE_DISLIKE;
+            } else if(postDOM.dataset.likeDislike == 'D') {
+              postDOM.dataset.likeDislike = 'L';
+
+              postDislikesImg.src = 'dislike.png'
+              postLikesImg.src = 'like_selected.png';
+              postLikes.innerHTML = "" + (like_count + 1);
+              postDislikes.innerHTML = "" + (dislike_count - 1);
+
+              postReply.type = REQUEST_TYPE.UPDATE_LIKE_DISLIKE;
+            } else {
+              postDOM.dataset.likeDislike = 'L';
+
+              event.target.src = 'like_selected.png';
+              postLikes.innerHTML = "" + (like_count + 1);
+
+              postReply.type = REQUEST_TYPE.ADD_LIKE_DISLIKE;
+            }
+          }
+
+          if(event.target.id == "dislikes_img" ){
+            postReply.like_dislike = 'D';
+            if(postDOM.dataset.likeDislike == 'D') {
+              postDOM.dataset.likeDislike = '';
+
+              postDislikesImg.src = 'dislike.png';
+              postDislikes.innerHTML = "" + (dislike_count - 1);
+              postReply.type = REQUEST_TYPE.DELETE_LIKE_DISLIKE;
+            } else if(postDOM.dataset.likeDislike == 'L') {
+              postDOM.dataset.likeDislike = 'D';
+
+              postLikesImg.src = 'like.png';
+              postDislikesImg.src = 'dislike_selected.png'
+              postDislikes.innerHTML = "" + (dislike_count + 1);
+              postLikes.innerHTML = "" + (like_count - 1);
+              postReply.type = REQUEST_TYPE.UPDATE_LIKE_DISLIKE;
+            } else {
+              postDOM.dataset.likeDislike = 'D';
+
+              event.target.src = 'dislike_selected.png';
+              postDislikes.innerHTML = "" + (dislike_count + 1);
+              postReply.type = REQUEST_TYPE.ADD_LIKE_DISLIKE;
+            }
           } 
-        };
+          console.log("sending request :" + postReply)
+          sendData(postReply);
 
-        function loadPosts(){
-          console.log("OnLoad called");
-          let getPosts = new Object();
-          getPosts.type = REQUEST_TYPE.GET_POSTS;
-          sendData(getPosts);
-        }
-
-        function processMenuClick(event) {
+        } else if (event.target.id == "replySubmit"){
+          let replyTextRow = postDOM.querySelector("#replyTextRow");
+          let replyText = postDOM.querySelector("#replyText");
+          let replyButtons = postDOM.querySelector("#replyButtons");
+          let postReply = new Object();
+          postReply.thread_id = postDOM.dataset.threadId;
+          postReply.post_level = 1 + Number(postDOM.dataset.postLevel);
+          postReply.text = replyText.value;
+          postReply.type = REQUEST_TYPE.ADD_REPLY;
+          postReply.user_id = userID;
+          postReply.parent_post_id = postDOM.id;
+          postReply.correlation_id = Date.now();
+          //ws.send(JSON.stringify(postReply));
+          console.log("sending request :" + postReply)
+          sendData(postReply);
+          replyTextRow.hidden = !replyTextRow.hidden;
+          replyButtons.hidden = replyTextRow.hidden;
           
-          console.log(event.type);
-          let menuDOM = event.currentTarget;
-          let postsImg = menuDOM.querySelector("#posts_img");
-          let feedImg = menuDOM.querySelector("#feed_img");
-
-          if(event.target.id == "posts_div" || event.target.id == "posts_img"){
-            postsImg.src = 'posts_selected.png';
-            feedImg.src = 'feed.png'
-            postContainer.hidden = true;
-          } else if(event.target.id == "feed_div" || event.target.id == "feed_img"){
-            postsImg.src = 'posts.png';
-            feedImg.src = 'feed_selected.png';
-            postContainer.hidden = false;
-          }
+          let postNode = postTemplate.cloneNode(true);
+          postNode.id = postReply.correlation_id;
+          postNode.classList.add('ps-' + postReply.post_level);
+          postNode.hidden = false;
+          postNode.dataset.threadId = postReply.thread_id;
+          postNode.dataset.postLevel = postReply.post_level;
+          postNode.dataset.parentPostId = postReply.parent_post_id
+          postNode.querySelector("#post_text").innerHTML = postReply.text;
+          newPosts.set(''+ postNode.id, postNode);
+          console.log("temp id:" + postNode.id);
         }
+      }
 
-        function processClick(event) {
-          console.log(event.type);
-          let postDOM = event.currentTarget;
-          if(event.target.id == "read_img"){
-            let summary = postDOM.querySelector("#summary");
-            let summaryText = postDOM.querySelector("#summaryText");
-            if(summaryText.innerHTML!=""){
-              summary.hidden = !summary.hidden;
-            }
-
-          } else if(event.target.id == "replies_img"){
-            userID = window.sessionStorage.getItem("user_id");
-            if(!userID){
-              alert("Please sign up to make a comment!");
+      ws.onopen = function () {
+        console.log('wss is open');
+        var t = setInterval(function(){
+          if (ws.readyState != 1) {
+              clearInterval(t);
               return;
-            }
-            let replyTextRow = postDOM.querySelector("#replyTextRow");
-            let replyButtons = postDOM.querySelector("#replyButtons");
-            replyTextRow.hidden = !replyTextRow.hidden;
-            replyButtons.hidden = replyTextRow.hidden;
-          } else if(event.target.id == "likes_img" || event.target.id == "dislikes_img"){
-            userID = window.sessionStorage.getItem("user_id");
-            if(!userID){
-              alert("Please sign up to like/dislike a post");
-              return;
-            }
-            let postReply = new Object();
-            postReply.post_id = postDOM.id;
-            postReply.user_id = 101;
-            postReply.thread_id = postDOM.dataset.threadId;
-            let postLikes = postDOM.querySelector("#post_likes");
-            let postDislikes = postDOM.querySelector("#post_dislikes");
-            let postLikesImg = postDOM.querySelector("#likes_img");
-            let postDislikesImg = postDOM.querySelector("#dislikes_img");
-            let like_count = parseInt(postLikes.innerHTML);
-            let dislike_count = parseInt(postDislikes.innerHTML);
-   
-            if(event.target.id == "likes_img" ){
-              postReply.like_dislike = 'L';
-              if(postDOM.dataset.likeDislike == 'L') {
-                postDOM.dataset.likeDislike = '';
-
-                postLikesImg.src = 'like.png';
-                postLikes.innerHTML = "" + (like_count - 1);
-                postReply.type = REQUEST_TYPE.DELETE_LIKE_DISLIKE;
-              } else if(postDOM.dataset.likeDislike == 'D') {
-                postDOM.dataset.likeDislike = 'L';
-
-                postDislikesImg.src = 'dislike.png'
-                postLikesImg.src = 'like_selected.png';
-                postLikes.innerHTML = "" + (like_count + 1);
-                postDislikes.innerHTML = "" + (dislike_count - 1);
-
-                postReply.type = REQUEST_TYPE.UPDATE_LIKE_DISLIKE;
-              } else {
-                postDOM.dataset.likeDislike = 'L';
-
-                event.target.src = 'like_selected.png';
-                postLikes.innerHTML = "" + (like_count + 1);
-
-                postReply.type = REQUEST_TYPE.ADD_LIKE_DISLIKE;
-              }
-            }
-
-            if(event.target.id == "dislikes_img" ){
-              postReply.like_dislike = 'D';
-              if(postDOM.dataset.likeDislike == 'D') {
-                postDOM.dataset.likeDislike = '';
-
-                postDislikesImg.src = 'dislike.png';
-                postDislikes.innerHTML = "" + (dislike_count - 1);
-                postReply.type = REQUEST_TYPE.DELETE_LIKE_DISLIKE;
-              } else if(postDOM.dataset.likeDislike == 'L') {
-                postDOM.dataset.likeDislike = 'D';
-
-                postLikesImg.src = 'like.png';
-                postDislikesImg.src = 'dislike_selected.png'
-                postDislikes.innerHTML = "" + (dislike_count + 1);
-                postLikes.innerHTML = "" + (like_count - 1);
-                postReply.type = REQUEST_TYPE.UPDATE_LIKE_DISLIKE;
-              } else {
-                postDOM.dataset.likeDislike = 'D';
-
-                event.target.src = 'dislike_selected.png';
-                postDislikes.innerHTML = "" + (dislike_count + 1);
-                postReply.type = REQUEST_TYPE.ADD_LIKE_DISLIKE;
-              }
-            } 
-            console.log("sending request :" + postReply)
-            sendData(postReply);
-
-          } else if (event.target.id == "replySubmit"){
-            let replyTextRow = postDOM.querySelector("#replyTextRow");
-            let replyText = postDOM.querySelector("#replyText");
-            let replyButtons = postDOM.querySelector("#replyButtons");
-            let postReply = new Object();
-            postReply.thread_id = postDOM.dataset.threadId;
-            postReply.post_level = 1 + Number(postDOM.dataset.postLevel);
-            postReply.text = replyText.value;
-            postReply.type = REQUEST_TYPE.ADD_REPLY;
-            postReply.user_id = userID;
-            postReply.parent_post_id = postDOM.id;
-            postReply.correlation_id = Date.now();
-            //ws.send(JSON.stringify(postReply));
-            console.log("sending request :" + postReply)
-            sendData(postReply);
-            replyTextRow.hidden = !replyTextRow.hidden;
-            replyButtons.hidden = replyTextRow.hidden;
-            
-            let postNode = postTemplate.cloneNode(true);
-            postNode.id = postReply.correlation_id;
-            postNode.classList.add('ps-' + postReply.post_level);
-            postNode.hidden = false;
-            postNode.dataset.threadId = postReply.thread_id;
-            postNode.dataset.postLevel = postReply.post_level;
-            postNode.dataset.parentPostId = postReply.parent_post_id
-            postNode.querySelector("#post_text").innerHTML = postReply.text;
-            newPosts.set(''+ postNode.id, postNode);
-            console.log("temp id:" + postNode.id);
           }
-        }
+        }, 5500);
+      };
+      function sendData(event){
+          console.log("sendData called");
+          if(ws.readyState){
+            console.log('sending event type:' + event.type);
+            ws.send(JSON.stringify(event));
+          }
+          else
+          {
+              console.log('conection not active');
+              setTimeout(sendData, 500, event);
+          }
+      }     
 
-        // function replyFocus(event) {
-        //   event.currentTarget.parentNode.previousElementSibling.hidden = false;
-        // }
-
-        // function replyBlur(event) {
-        //   event.currentTarget.hidden = true
-        //   event.currentTarget.parentNode.previousElementSibling.hidden = true;
-        // }
-        ws.onopen = function () {
-          console.log('wss is open');
-          var t = setInterval(function(){
-            if (ws.readyState != 1) {
-                clearInterval(t);
-                return;
+      ws.onmessage = function(event) {
+          //console.log("server event received" + event.data);
+          var jsonObject = JSON.parse(event.data);
+          if (jsonObject['type'] == REQUEST_TYPE.ADD_REPLY){
+            if(jsonObject['status'] == 'SUCCESS' && jsonObject['correlation_id'] != null){
+              let newPostCreated = newPosts.get(''+jsonObject['correlation_id']);
+              console.log(newPostCreated);
+              newPostCreated.id = jsonObject['id'];
+              let parentPost = document.getElementById(jsonObject['parent_post_id']);
+              parentPost.after(newPostCreated);
+            } else {
+              console.log("post creation failed");
             }
-          }, 55000);
-        };
-        function sendData(event){
-            console.log("sendData called");
-            if(ws.readyState){
-              console.log('sending event type:' + event.type);
-              ws.send(JSON.stringify(event));
+          } else if (jsonObject['type'] == REQUEST_TYPE.SIGNUP_USER){
+            if(jsonObject['status'] == 'SUCCESS'){
+              window.sessionStorage.setItem("user_email", jsonObject['user_email']);
+              window.sessionStorage.setItem("user_id", jsonObject['user_id']);
+              console.log("signup successful! "+jsonObject['user_name']);
+              userName = jsonObject['user_name'];
+              userID = jsonObject['user_id'];
+              let signup_form_node = document.getElementById("signup_form");
+              loginSignupContainer.hidden = true;
+              displayPage(PAGE.GET_POSTS);
+            } else {
+              alert("signup request failed, please try again later");
             }
-            else
-            {
-                console.log('conection not active');
-                setTimeout(sendData, 500, event);
+          } else if (jsonObject['type'] == REQUEST_TYPE.LOGIN_USER){
+            if(jsonObject['status'] == 'SUCCESS'){
+              window.sessionStorage.setItem("user_email", jsonObject['user_email']);
+              window.sessionStorage.setItem("user_id", jsonObject['user_id']);
+              console.log("login successful! "+jsonObject['user_name']);
+              userName = jsonObject['user_name'];
+              userID = jsonObject['user_id'];
+              let login_form_node = document.getElementById("login_form");
+              loginSignupContainer.hidden = true;
+              displayPage(PAGE.GET_POSTS);
+            } else {
+              alert("login request failed, please try again later");
             }
-        }     
+          } else if (jsonObject['type'] == REQUEST_TYPE.GET_POSTS){
+            var posts = jsonObject['posts'];
+            for (var index in posts) {
 
+                let post = posts[index];
+                let post_id = post['post_id'];
+                let thread_id = post['thread_id'];
+                let post_level = post['post_level'];              
+                let post_text = post['text'];
+                let user_name = post['user_name'];
+                let post_url =  post['url'];
+                let post_replies = 0;
+                let post_likes = post['likes'];
+                let post_dislikes = post['dislikes'];
+                let post_like_dislike = post['like_dislike'];
+                let post_views = post['views'];
+                let parent_post_id = post['parent_post_id'];
+                let post_timestamp = post['timestamp'];
+                let news_text_summary = post['news_text_summary'];
 
-   
-        // function sendMessage(event) {
-        //     let importNews = new Object();
-        //     importNews.type = 'IMPORT_NEWS';
-        //     ws.send(JSON.stringify(importNews));
-        // }
-        ws.onmessage = function(event) {
-            var jsonObject = JSON.parse(event.data);
-            if (jsonObject['type'] == REQUEST_TYPE.ADD_REPLY){
-              if(jsonObject['status'] == 'SUCCESS' && jsonObject['correlation_id'] != null){
-                let newPostCreated = newPosts.get(''+jsonObject['correlation_id']);
-                console.log(newPostCreated);
-                newPostCreated.id = jsonObject['id'];
-                let parentPost = document.getElementById(jsonObject['parent_post_id']);
-                parentPost.after(newPostCreated);
-              } else {
-                console.log("post creation failed");
-              }
-            } else if (jsonObject['type'] == REQUEST_TYPE.SIGNUP_USER){
-              if(jsonObject['status'] == 'SUCCESS'){
-                window.sessionStorage.setItem("user_email", jsonObject['user_email']);
-                window.sessionStorage.setItem("user_id", jsonObject['user_id']);
-                console.log("signup successful! "+jsonObject['user_name']);
-                userName = jsonObject['user_name'];
-                userID = jsonObject['user_id'];
-                let signup_form_node = document.getElementById("signup_form");
-                loginSignupContainer.hidden = true;
-                displayPage(PAGE.GET_POSTS);
-              } else {
-                alert("signup request failed, please try again later");
-              }
-            } else if (jsonObject['type'] == REQUEST_TYPE.LOGIN_USER){
-              if(jsonObject['status'] == 'SUCCESS'){
-                window.sessionStorage.setItem("user_email", jsonObject['user_email']);
-                window.sessionStorage.setItem("user_id", jsonObject['user_id']);
-                console.log("login successful! "+jsonObject['user_name']);
-                userName = jsonObject['user_name'];
-                userID = jsonObject['user_id'];
-                let login_form_node = document.getElementById("login_form");
-                loginSignupContainer.hidden = true;
-                displayPage(PAGE.GET_POSTS);
-              } else {
-                alert("login request failed, please try again later");
-              }
-            } else if (jsonObject['type'] == REQUEST_TYPE.GET_POSTS){
-              var posts = jsonObject['posts'];
-              for (var index in posts) {
+                let postNode = postTemplate.cloneNode(true);
+                postNode.id = post_id;
+                postNode.classList.add('ps-' + post_level);
+                postNode.hidden = false;
+                postNode.dataset.threadId = thread_id;
+                postNode.dataset.postLevel = post_level;
+                postNode.dataset.likeDislike = post_like_dislike;
+                postNode.dataset.parentPostId = parent_post_id;
+                postNode.querySelector("#user_name").innerHTML = user_name;
+                postNode.querySelector("#post_timestamp").innerHTML = post_timestamp;
+                postNode.querySelector("#post_text").innerHTML = post_text;
+                if(post_url != null ) {
+                  postNode.querySelector("#post_url").setAttribute("href", post_url);
+                  postNode.querySelector("#post_url").hidden = false;
+                } 
 
-                  let post = posts[index];
-                  let post_id = post['post_id'];
-                  let thread_id = post['thread_id'];
-                  let post_level = post['post_level'];              
-                  let post_text = post['text'];
-                  let user_name = post['user_name'];
-                  let post_url =  post['url'];
-                  let post_replies = 0;
-                  let post_likes = post['likes'];
-                  let post_dislikes = post['dislikes'];
-                  let post_like_dislike = post['like_dislike'];
-                  let post_views = post['views'];
-                  let parent_post_id = post['parent_post_id'];
-                  let post_timestamp = post['timestamp'];
-                  let news_text_summary = post['news_text_summary'];
-
-                  let postNode = postTemplate.cloneNode(true);
-                  postNode.id = post_id;
-                  postNode.classList.add('ps-' + post_level);
-                  postNode.hidden = false;
-                  postNode.dataset.threadId = thread_id;
-                  postNode.dataset.postLevel = post_level;
-                  postNode.dataset.likeDislike = post_like_dislike;
-                  postNode.dataset.parentPostId = parent_post_id;
-                  postNode.querySelector("#user_name").innerHTML = user_name;
-                  postNode.querySelector("#post_timestamp").innerHTML = post_timestamp;
-                  postNode.querySelector("#post_text").innerHTML = post_text;
-                  if(post_url != null ) {
-                    postNode.querySelector("#post_url").setAttribute("href", post_url);
-                    postNode.querySelector("#post_url").hidden = false;
-                  } 
-
-                  if(post_level == 0 ){
-                    if(user_name == "New York Times") {
-                      postNode.querySelector("#post_logo").setAttribute("src", NYT_logo);
-                    } else if(user_name == "Washington Post") {
-                      postNode.querySelector("#post_logo").setAttribute("src", WAPO_logo);
-                    } else {
-                      postNode.querySelector("#post_logo").setAttribute("src", reuters_logo);
-                    }
-
+                if(post_level == 0 ){
+                  if(user_name == "New York Times") {
+                    postNode.querySelector("#post_logo").setAttribute("src", NYT_logo);
+                  } else if(user_name == "Washington Post") {
+                    postNode.querySelector("#post_logo").setAttribute("src", WAPO_logo);
                   } else {
-                    postNode.querySelector("#post_logo").setAttribute("src", post_logo);
+                    postNode.querySelector("#post_logo").setAttribute("src", reuters_logo);
                   }
-                  postNode.querySelector("#post_replies").innerHTML = post_replies;
-                  if(post_like_dislike == 'L'){
-                    postNode.querySelector("#likes_img").src = 'like_selected.png';
-                  } else if(post_like_dislike == 'D') {
-                    postNode.querySelector("#dislikes_img").src = 'dislike_selected.png';
-                  }
-                  postNode.querySelector("#post_likes").innerHTML = post_likes;
-                  postNode.querySelector("#post_dislikes").innerHTML = post_dislikes;
-                  postNode.querySelector("#post_views").innerHTML = post_views;
-                  postNode.querySelector("#summaryText").innerHTML = news_text_summary;
 
-                  postContainer.appendChild(postNode);
-              }
+                } else {
+                  postNode.querySelector("#post_logo").setAttribute("src", post_logo);
+                }
+                postNode.querySelector("#post_replies").innerHTML = post_replies;
+                if(post_like_dislike == 'L'){
+                  postNode.querySelector("#likes_img").src = 'like_selected.png';
+                } else if(post_like_dislike == 'D') {
+                  postNode.querySelector("#dislikes_img").src = 'dislike_selected.png';
+                }
+                postNode.querySelector("#post_likes").innerHTML = post_likes;
+                postNode.querySelector("#post_dislikes").innerHTML = post_dislikes;
+                postNode.querySelector("#post_views").innerHTML = post_views;
+                postNode.querySelector("#summaryText").innerHTML = news_text_summary;
+
+                postContainer.appendChild(postNode);
             }
-        };
+          }
+      };
 
-        function validateSignup() {
+      function validateSignup() {
+        let signup_form_node = document.getElementById("signup_form");
+        let password = signup_form_node.querySelector("#password").value;
+        let confirmPassword = signup_form_node.querySelector("#confirm_password").value;
+        if (password && confirmPassword && password !== confirmPassword) {
+          alert("The passwords do not match.");
+          signup_form_node.querySelector("#signup_button").disabled = true
+          return false;
+        } else if(password && password.length < 8){
+          alert("The passsword must be atleast 8 characters long")
+        }
+        let user_name = signup_form_node.querySelector("#user_name").value;
+        let user_email = signup_form_node.querySelector("#user_email").value;
+        if (user_name && user_email) {
+          if(validateEmail(user_email)) {
+            signup_form_node.querySelector("#signup_button").disabled = false
+            return true;
+          } else {
+            alert("Please enter a valid email id.");
+            signup_form_node.querySelector("#signup_button").disabled = true
+          }
+        }
+        return false;
+      }  
+
+      function validateEmail(user_email){
+        if(user_email && user_email.indexOf('@') != -1 
+              && user_email.indexOf('@') < user_email.indexOf('.') 
+              && user_email.indexOf('.') < (user_email.length -1)) {
+                  return true;
+        } else {
+          return false;
+        }
+      }
+
+      function processSignup() {
+        if(validateSignup()){
           let signup_form_node = document.getElementById("signup_form");
           let password = signup_form_node.querySelector("#password").value;
-          let confirmPassword = signup_form_node.querySelector("#confirm_password").value;
-          if (password && confirmPassword && password !== confirmPassword) {
-            alert("The passwords do not match.");
-            signup_form_node.querySelector("#signup_button").disabled = true
-            return false;
-          } else if(password && password.length < 8){
-            alert("The passsword must be atleast 8 characters long")
-          }
           let user_name = signup_form_node.querySelector("#user_name").value;
           let user_email = signup_form_node.querySelector("#user_email").value;
-          if (user_name && user_email) {
-            if(validateEmail(user_email)) {
-              signup_form_node.querySelector("#signup_button").disabled = false
-              return true;
-            } else {
-              alert("Please enter a valid email id.");
-              signup_form_node.querySelector("#signup_button").disabled = true
-            }
-          }
-          return false;
-        }  
+          let signupUser = new Object();
+          signupUser.type = REQUEST_TYPE.SIGNUP_USER;
+          signupUser.user_name = user_name;
+          signupUser.password = password;
+          signupUser.user_email = user_email;
+          sendData(signupUser);
+        }
+      }  
 
-        function validateEmail(user_email){
-          if(user_email && user_email.indexOf('@') != -1 
-                && user_email.indexOf('@') < user_email.indexOf('.') 
-                && user_email.indexOf('.') < (user_email.length -1)) {
-                  return true;
-          } else {
+      function processLogin() {
+          let signup_form_node = document.getElementById("login_form");
+          let password = signup_form_node.querySelector("#password").value;
+          let user_email = signup_form_node.querySelector("#user_email").value;
+          if(password && password.length < 8){
+            alert("The passsword must be atleast 8 characters long")
+            return false;
+          } 
+          if(!validateEmail(user_email)){
             return false;
           }
-        }
-
-        function processSignup() {
-          if(validateSignup()){
-            let signup_form_node = document.getElementById("signup_form");
-            let password = signup_form_node.querySelector("#password").value;
-            let user_name = signup_form_node.querySelector("#user_name").value;
-            let user_email = signup_form_node.querySelector("#user_email").value;
-            let signupUser = new Object();
-            signupUser.type = REQUEST_TYPE.SIGNUP_USER;
-            signupUser.user_name = user_name;
-            signupUser.password = password;
-            signupUser.user_email = user_email;
-            sendData(signupUser);
+          if(password && user_email){
+            let loginUser = new Object();
+            loginUser.type = REQUEST_TYPE.LOGIN_USER;
+            loginUser.password = password;
+            loginUser.user_email = user_email;
+            sendData(loginUser);
           }
+          return true;
+      }
+
+      function displayPage(page) {
+
+        let signup_form_node = document.getElementById("signup_form");
+         let login_form_node = document.getElementById("login_form");
+        if(page == PAGE.LOGIN) {
+          console.log("switching to login page");
+
+          signup_form_node.hidden = true;
+          login_form.hidden = false;
+          postContainer.hidden = true;
+        } else if (page == PAGE.SIGNUP){
+          console.log("switching to signup page");
+          signup_form_node.hidden = false;
+          login_form.hidden = true;
+          postContainer.hidden = true;
+        } else if (page == PAGE.GET_POSTS){
+          console.log("switching to GET_POSTS page");
+          signup_form_node.hidden = true;
+          login_form.hidden = true;
+          postContainer.hidden = false;
         }  
-
-        function processLogin() {
-            let signup_form_node = document.getElementById("login_form");
-            let password = signup_form_node.querySelector("#password").value;
-            let user_email = signup_form_node.querySelector("#user_email").value;
-            if(password && password.length < 8){
-              alert("The passsword must be atleast 8 characters long")
-              return false;
-            } 
-            if(!validateEmail(user_email)){
-              return false;
-            }
-            if(password && user_email){
-              let loginUser = new Object();
-              loginUser.type = REQUEST_TYPE.LOGIN_USER;
-              loginUser.password = password;
-              loginUser.user_email = user_email;
-              sendData(loginUser);
-            }
-            return true;
-        }
-
-
-        function displayPage(page) {
-
-          let signup_form_node = document.getElementById("signup_form");
-           let login_form_node = document.getElementById("login_form");
-          if(page == PAGE.LOGIN) {
-            console.log("switching to login page");
-
-            signup_form_node.hidden = true;
-            login_form.hidden = false;
-            postContainer.hidden = true;
-          } else if (page == PAGE.SIGNUP){
-            console.log("switching to signup page");
-            signup_form_node.hidden = false;
-            login_form.hidden = true;
-            postContainer.hidden = true;
-          } else if (page == PAGE.GET_POSTS){
-            console.log("switching to GET_POSTS page");
-            signup_form_node.hidden = true;
-            login_form.hidden = true;
-            postContainer.hidden = false;
-          }  
-        }
+      }
     </script>
   </body>
 </html>
