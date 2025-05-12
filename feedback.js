@@ -38,7 +38,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     if (feedbackSocket && feedbackSocket.readyState === WebSocket.OPEN) {
       feedbackSocket.send(JSON.stringify(payload));
-      alertBox.innerHTML = '<div class="alert alert-success">Thank you for your feedback!</div>';
+      alertBox.innerHTML = '<div class="alert alert-success">Thank you for your feedback! Our support team will respond to this via email shortly</div>';
       form.reset();
     } else {
       alertBox.innerHTML = '<div class="alert alert-danger">Unable to submit feedback. Please try again later.</div>';
